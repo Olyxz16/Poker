@@ -18,7 +18,7 @@ public abstract class Player
 
     protected abstract Move ChoseMove(GameState state);
     protected abstract void DisplayErrorMessage(string message);
-    public abstract void DisplayBoard(Board board);
+    
 
     public Move Play(GameState state) {
         Move chosenMove = ChoseMove(state);

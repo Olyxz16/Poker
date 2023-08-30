@@ -43,10 +43,6 @@ public class ConsolePlayer : Player
     }
 
 
-    public override void DisplayBoard(Board board)
-    {
-        Console.WriteLine("");
-    }
     protected override void DisplayErrorMessage(string message)
     {
         Console.WriteLine(message);
