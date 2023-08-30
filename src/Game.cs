@@ -1,18 +1,16 @@
-using Poker.Cards;
+using Poker.Players;
 
 namespace Poker;
 
 public class Game
 {
+
+    public readonly static int SMALL_BLIND = 10;
+    public static int BIG_BLIND => 2*SMALL_BLIND;
     
-    Deck deck;
+    //private List<Player> _players;
+    //public IReadOnlyList<Player> Players { get => _players; }
 
-    public Game() {
-        deck = Deck.Standard52CardDeck();
-        foreach(var card in deck.Cards) {
-            Console.WriteLine(card.ToString());
-        }
-    }
-
+    //public Board Board { get; private set; }
 
 }
