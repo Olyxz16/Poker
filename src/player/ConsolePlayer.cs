@@ -6,7 +6,7 @@ namespace Poker.Players;
 public class ConsolePlayer : Player
 {
 
-    public ConsolePlayer(int balance, List<Card> hand) : base(balance, hand)
+    public ConsolePlayer(int balance) : base(balance)
     {
     }
 

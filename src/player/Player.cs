@@ -7,12 +7,13 @@ public abstract class Player
     
     public int Balance { get; private set; }
 
-    protected readonly List<Card> _hand;
+    // Protect this to avoid being able to have more than 2 cards.
+    protected List<Card> _hand;
     public IReadOnlyList<Card> Hand { get => _hand; }
 
-    public Player(int balance, List<Card> hand) {
+    public Player(int balance) {
         Balance = balance;
-        _hand = hand;
+        _hand = new List<Card>(2);
     }
 
     protected abstract Move ChoseMove(GameState state);
@@ -30,6 +31,13 @@ public abstract class Player
             Balance -= chosenMove.BetValue;
         }
         return chosenMove;
+    }
+
+    protected internal void DrawHand(List<Card> cards) {
+        if(cards.Count != 2) {
+            throw new ArgumentException("Too much cards drawn");
+        }
+        _hand = cards;
     }
 
 }
