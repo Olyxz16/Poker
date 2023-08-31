@@ -5,7 +5,7 @@ namespace Poker.Players;
 public abstract class Player
 {
     
-    public int Balance { get; private set; }
+    public int Balance;
 
     // Protect this to avoid being able to have more than 2 cards.
     protected List<Card> _hand;
