@@ -34,7 +34,7 @@ public class Deck
     public List<Card> Draw(int number) {
         var cards = new List<Card>();
         for(int i = 0 ; i < number ; i++) {
-            cards.Add(cards[0]);
+            cards.Add(_cards[0]);
             _cards.RemoveAt(0);
         }
         return cards;
