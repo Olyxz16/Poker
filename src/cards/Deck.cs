@@ -43,7 +43,7 @@ public class Deck
     // To be recrated with better random function
     public void Shuffle() {
         var rnd = new Random();
-        _cards = (List<Card>)_cards.OrderBy(item => rnd.Next());
+        _cards = new List<Card>(_cards.OrderBy(item => rnd.Next()));
     }
 
 
