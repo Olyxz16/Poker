@@ -29,11 +29,16 @@ public class Game
         _bets = new List<int>();
         _flop = new List<Card>();
 
-        _deck = Deck.Standard52CardDeck();
-        _deck.Shuffle();
+        _deck = GetNewShuffledDeck();
 
         _bank = 0;
 
+    }
+
+    private static Deck GetNewShuffledDeck() {
+        var deck = Deck.Standard52CardDeck();
+        deck.Shuffle();
+        return deck;
     }
 
     public void Run() {
@@ -56,6 +61,7 @@ public class Game
 
     private void InitGame() {
         _bank = 0;
+        _deck = GetNewShuffledDeck();
         _flop = _deck.Draw(5);
         foreach(var player in _players) {
             player.DrawHand(_deck.Draw(2));
