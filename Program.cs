@@ -11,7 +11,7 @@ public class Program
         var player = new ConsolePlayer(100);
 
         var game = new Game(new List<Player> { player });
-        game.Run();
+        game.Play();
 
     }
 }

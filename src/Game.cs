@@ -41,11 +41,13 @@ public class Game
         return deck;
     }
 
-    public void Run() {
+    public Player Play() {
+        Player winner = _players[0];
         while(Players.Count > 1) {
-            var winner = PlayGame();
+            winner = PlayGame();
             RemoveLosers();
         }
+        return winner;
     }
 
     private Player PlayGame() {
