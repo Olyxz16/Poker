@@ -10,17 +10,17 @@ public class Game
     public static int BIG_BLIND => 2*SMALL_BLIND;
 
     
-    private List<Player> _players;
-    public IReadOnlyList<Player> Players { get => _players; }
+    protected List<Player> _players;
+    public IReadOnlyList<Player> Players => _players;
 
-    private List<int> _bets;
-    public IReadOnlyList<int> Bets { get => _bets; }
+    protected List<int> _bets;
+    public IReadOnlyList<int> Bets => _bets;
 
-    private List<Card> _flop;
-    public IReadOnlyList<Card> River { get => _flop; }
+    protected List<Card> _flop;
+    public IReadOnlyList<Card> River => _flop;
 
-    private Deck _deck;
-    private int _bank;
+    protected Deck _deck;
+    protected int _bank;
 
 
     public Game(List<Player> players) {
@@ -59,7 +59,7 @@ public class Game
         return winner;
     }
 
-    private void InitGame() {
+    protected void InitGame() {
         _bank = 0;
         _deck = GetNewShuffledDeck();
         _flop = _deck.Draw(5);
