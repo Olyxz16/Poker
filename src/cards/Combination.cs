@@ -93,7 +93,7 @@ public struct Combination
     private static int NumberOfPairs(List<Card> cards) {
         int pairs = 0;
         foreach(var card in cards) {
-            if(cards.Select(c => c.Rank == card.Rank).Count() == 2) {
+            if(cards.FindAll(c => c == card).Count == 2) {
                 pairs++;
             }
         }
