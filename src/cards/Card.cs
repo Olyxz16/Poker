@@ -11,6 +11,7 @@ public class Card
         Color = color;
     }
 
+
     public override string ToString() {
         var rankString = Rank switch
         {
@@ -23,6 +24,35 @@ public class Card
         var colorString = Color.ToString();
         return $"{rankString} of {colorString}";
     }
+
+
+    public static bool operator ==(Card a, Card b)
+    {
+        return a.Rank == b.Rank;
+    }
+    public static bool operator !=(Card a, Card b)
+    {
+        return a.Rank != b.Rank;
+    }
+
+    public static bool operator >(Card a, Card b)
+    {
+        return (a.Rank == 1 && b.Rank != 1) || a.Rank > b.Rank;
+    }
+    public static bool operator <(Card a, Card b)
+    {
+        return (b.Rank == 1 && a.Rank != 1) || a.Rank < b.Rank;
+    }
+    
+    public static bool operator >=(Card a, Card b)
+    {
+        return a.Rank == 1 || a.Rank >= b.Rank;
+    }
+    public static bool operator <=(Card a, Card b)
+    {
+        return b.Rank == 1 || a.Rank <= b.Rank;
+    }
+    
         
 }
 
