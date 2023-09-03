@@ -43,15 +43,12 @@ public struct Combination
     }
 
     private static Player CompareHands(Player p1, Player p2) {
-        static int cmp(Card card) => card.Rank;
-        var p1max = p1.Hand.Max(cmp);
-        var p2max = p2.Hand.Max(cmp);
-        var p1min = p1.Hand.Min(cmp);
-        var p2min = p2.Hand.Min(cmp);
-        if (p1max == p2max) {
+        (var p1max, var p1min) = p1.Hand[0] >= p1.Hand[1] ? (p1.Hand[0], p1.Hand[1]) : (p1.Hand[1], p1.Hand[0]);
+        (var p2max, var p2min) = p2.Hand[0] >= p2.Hand[1] ? (p2.Hand[0], p2.Hand[1]) : (p2.Hand[1], p2.Hand[0]);
+        if(p1max == p2max) {
             return p1min > p2min ? p1 : p2;
         }
-        return p1min > p2min ? p1 : p2;
+        return p1max > p2max ? p1 : p2;
     }
 
     private static List<Card> OrderCards(Player player, List<Card> flop) {
