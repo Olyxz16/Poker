@@ -22,7 +22,7 @@ public struct Combination
         _flag |= _flag == 0 ? (int)CombinationType.HIGH_CARD : 0;
 
         int isFullHouseFlag = (int)CombinationType.THREE_OF_A_KIND | (int)CombinationType.PAIR;
-        _flag = (_flag & isFullHouseFlag) == isFullHouseFlag ? (int)CombinationType.FULL_HOUSE : 0;
+        _flag |= (_flag & isFullHouseFlag) == isFullHouseFlag ? (int)CombinationType.FULL_HOUSE : 0;
         
         int isStraightFlushFlag = (int)CombinationType.STRAIGHT | (int)CombinationType.FLUSH;
         _flag |= (_flag & isStraightFlushFlag) == isStraightFlushFlag ? (int)CombinationType.STRAIGHT_FLUSH : 0;
