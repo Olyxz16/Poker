@@ -42,10 +42,14 @@ public struct Combination
         }
     }
 
-    private static Player CompareHands(Player p1, Player p2) {
+    private static Player? CompareHands(Player p1, Player p2, List<Player>? winners = null) {
         (var p1max, var p1min) = p1.Hand[0] >= p1.Hand[1] ? (p1.Hand[0], p1.Hand[1]) : (p1.Hand[1], p1.Hand[0]);
         (var p2max, var p2min) = p2.Hand[0] >= p2.Hand[1] ? (p2.Hand[0], p2.Hand[1]) : (p2.Hand[1], p2.Hand[0]);
         if(p1max == p2max) {
+            if(p1min == p2min) {
+                winners = new List<Player> { p1, p2 };
+                return null;
+            }
             return p1min > p2min ? p1 : p2;
         }
         return p1max > p2max ? p1 : p2;
