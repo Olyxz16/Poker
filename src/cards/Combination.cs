@@ -7,53 +7,105 @@ public struct Combination
 
     private int _flag;
 
+    private Card _primaryCard;
+    private Card _secondaryCard;
+
+    private Card _best_triple_rank;
+    private Card _best_pair_rank;
+
+    private Card _low_straight_card;
+    private Card _flush_color;
+    private List<Card> _flush_cards;
+
 
     private Combination(Player player, List<Card> flop) {
         _flag = 0;
+        _flush_cards = new List<Card>();
         var cards = OrderCards(player, flop);
-        int pairs = NumberOfPairs(cards);
-        _flag |= IsFlush(cards) ? (int)CombinationType.FLUSH: 0;
-        _flag |= IsStraight(cards) ? (int)CombinationType.STRAIGHT: 0;
-        _flag |= IsFOAK(cards) ? (int)CombinationType.FOUR_OF_A_KIND: 0;
-        _flag |= IsTOAK(cards) ? (int)CombinationType.THREE_OF_A_KIND : 0;
-        _flag |= pairs == 2 ? (int)CombinationType.TWO_PAIR : 0;
-        _flag |= pairs == 1 ? (int)CombinationType.PAIR : 0;
+        SetFlushFlag(cards);
+        SetStraightFlag(cards);
+        SetFourOfAKindFlag(cards);
+        SetThreeOfAKindFlag(cards);
+        SetPairsFlag(cards);
 
-        _flag |= _flag == 0 ? (int)CombinationType.HIGH_CARD : 0;
+        SetHighCardFlag(cards);
 
-        int isFullHouseFlag = (int)CombinationType.THREE_OF_A_KIND | (int)CombinationType.PAIR;
-        _flag |= (_flag & isFullHouseFlag) == isFullHouseFlag ? (int)CombinationType.FULL_HOUSE : 0;
-        
-        int isStraightFlushFlag = (int)CombinationType.STRAIGHT | (int)CombinationType.FLUSH;
-        _flag |= (_flag & isStraightFlushFlag) == isStraightFlushFlag ? (int)CombinationType.STRAIGHT_FLUSH : 0;
-        
-        _flag |= (_flag & (int)CombinationType.STRAIGHT_FLUSH) != 0 && cards[0].Rank == 10 ? (int)CombinationType.ROYAL_FLUSH : 0;
+        SetFullHouseFlag(cards);
+        SetStraightFlushFlag(cards);
+        SetRoyalFlushFlag(cards);
     }
 
 
-    public static Player Compare(Player p1, Player p2, List<Card> flop) {
+    public static Player? Compare(Player p1, Player p2, List<Card> flop) {
         var c1 = new Combination(p1, flop);
         var c2 = new Combination(p2, flop);
 
-        if(c1._flag == c2._flag) {
-            return CompareHands(p1, p2);
-        } else {
+        if(c1._flag != c2._flag) {
             return c1._flag > c2._flag ? p1 : p2;
         }
+
+        switch(c1._flag) {
+            case >= (int)CombinationType.STRAIGHT_FLUSH : {
+                if(c1._low_straight_card == c2._low_straight_card) {
+                    return null;
+                }
+                return c1._low_straight_card > c2._low_straight_card ? p1 : p2;
+            };
+            case >= (int)CombinationType.FOUR_OF_A_KIND : {
+                return c1._primaryCard > c2._primaryCard ? p1 : p2;
+            };
+            case >= (int)CombinationType.FULL_HOUSE : {
+                return c1._primaryCard > c2._primaryCard ? p1 : p2;
+            };
+            case >= (int)CombinationType.FLUSH : {
+                for(int i = 0 ; i < 5 ; i++) {
+                    if(c1._flush_cards[i] == c2._flush_cards[i]) {
+                        continue;
+                    }
+                    return c1._flush_cards[i] > c2._flush_cards[i] ? p1 : p2;
+                }
+                return null;
+            };
+            case >= (int)CombinationType.STRAIGHT : {
+                if(c1._low_straight_card == c2._low_straight_card) {
+                    return null;
+                }
+                return c1._low_straight_card > c2._low_straight_card ? p1 : p2;
+            };
+            case >= (int)CombinationType.THREE_OF_A_KIND : {
+                return c1._primaryCard > c2._primaryCard ? p1 : p2;
+            };
+            case >= (int)CombinationType.TWO_PAIR : {
+                if(c1._primaryCard == c2._primaryCard) {
+                    if(c1._secondaryCard == c2._secondaryCard) {
+                        return null;
+                    }
+                    return c1._secondaryCard > c2._secondaryCard ? p1 : p2;
+                }
+                return c1._primaryCard > c2._secondaryCard ? p1 : p2;
+            };
+            case >= (int)CombinationType.PAIR : {
+                if(c1._primaryCard == c2._primaryCard) {
+                    return null;
+                }
+                return c1._primaryCard > c2._secondaryCard ? p1 : p2;
+            };
+            case >= (int)CombinationType.HIGH_CARD : {
+                (var p1max, var p1min) = p1.Hand[0] >= p1.Hand[1] ? (p1.Hand[0], p1.Hand[1]) : (p1.Hand[1], p1.Hand[0]);
+                (var p2max, var p2min) = p2.Hand[0] >= p2.Hand[1] ? (p2.Hand[0], p2.Hand[1]) : (p2.Hand[1], p2.Hand[0]);
+                if(p1max == p2max) {
+                    if(c1._secondaryCard == c2._secondaryCard) {
+                        return null;
+                    }
+                    return p1min > p2min ? p1 : p2;
+                }
+                return p1max > p2max ? p1 : p2;
+            };
+            default: return null;
+        }
+
     }
 
-    private static Player? CompareHands(Player p1, Player p2, List<Player>? winners = null) {
-        (var p1max, var p1min) = p1.Hand[0] >= p1.Hand[1] ? (p1.Hand[0], p1.Hand[1]) : (p1.Hand[1], p1.Hand[0]);
-        (var p2max, var p2min) = p2.Hand[0] >= p2.Hand[1] ? (p2.Hand[0], p2.Hand[1]) : (p2.Hand[1], p2.Hand[0]);
-        if(p1max == p2max) {
-            if(p1min == p2min) {
-                winners = new List<Player> { p1, p2 };
-                return null;
-            }
-            return p1min > p2min ? p1 : p2;
-        }
-        return p1max > p2max ? p1 : p2;
-    }
 
     private static List<Card> OrderCards(Player player, List<Card> flop) {
         var result = new List<Card>(flop);
@@ -62,46 +114,133 @@ public struct Combination
         return result;
     }
 
-    private static bool IsFlush(List<Card> cards) {
-        var color = cards[0].Color;
-        return cards.All(card => card.Color == color);
-    }
-    private static bool IsStraight(List<Card> cards) {
-        int start = cards[0].Rank;
-        bool hasAce = start == 1;
-        int following = 1;
-        for(int i = 1 ; i < 5 ; i++) {
-            if(cards[i].Rank != start + i) {
-                break;
-            }
-            following++;
+
+    private void SetFlushFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.FLUSH) {
+            return;
         }
-        return following == 5 || (start == 10 && hasAce);
-    }
-    private static bool IsFOAK(List<Card> cards) {
         foreach(var card in cards) {
-            if(cards.Select(c => c.Rank == card.Rank).Count() == 4) {
-                return true;
+            var color = cards[0].Color;
+            var flush_cards = cards.FindAll(card => card.Color == color);
+            if(flush_cards.Count >= 5) {
+                _flag |= (int)CombinationType.FLUSH;
+                _flush_color = card;
+                _flush_cards = (List<Card>)flush_cards.OrderByDescending(card => card.Rank);
+                return;
             }
         }
-        return false;
     }
-    private static bool IsTOAK(List<Card> cards) {
+    private void SetStraightFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.STRAIGHT) {
+            return;
+        }
+        for(int startIndex = 0 ; startIndex < 3 ; startIndex++) {
+            var pivotCard = cards[startIndex];
+            bool isStraight = true;
+            for(int cardIndex = 1 ; cardIndex < 5 ; cardIndex++) {
+                if(cards[startIndex+cardIndex].Rank != pivotCard.Rank+cardIndex) {
+                    isStraight = false;
+                    break;
+                }
+            }
+            if(isStraight) {
+                _flag |= (int)CombinationType.STRAIGHT;
+                _low_straight_card = pivotCard;
+            }
+        }
+    }
+    private void SetFourOfAKindFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.FOUR_OF_A_KIND) {
+            return;
+        }
         foreach(var card in cards) {
-            if(cards.Select(c => c.Rank == card.Rank).Count() == 3) {
-                return true;
+            if(cards.FindAll(c => c == card).Count == 4) {
+                _flag |= (int)CombinationType.FOUR_OF_A_KIND;
+                _primaryCard = card;
+                return ;
             }
         }
-        return false;
     }
-    private static int NumberOfPairs(List<Card> cards) {
+    private void SetThreeOfAKindFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.THREE_OF_A_KIND) {
+            return;
+        }
+        bool isSecond = false;
+        foreach(var card in cards) {
+            if(cards.FindAll(c => c == card).Count == 3) {
+                _flag |= (int)CombinationType.THREE_OF_A_KIND;
+                if(isSecond) {
+                    if(card > _primaryCard) {
+                        _secondaryCard = _primaryCard;
+                        _primaryCard = card;
+                    } else {
+                        _secondaryCard = card;
+                    }
+                } else {
+                    isSecond = true;
+                    _primaryCard = card;
+                }
+            }
+        }
+        _best_triple_rank = _primaryCard;
+    }
+    private void SetPairsFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.PAIR) {
+            return;
+        }
+        bool isSecond = false;
         int pairs = 0;
-        foreach(var card in cards) {
+        foreach(var card in cards){
             if(cards.FindAll(c => c == card).Count == 2) {
-                pairs++;
+                _flag |= pairs > 1 ? (int)CombinationType.TWO_PAIR : (int)CombinationType.PAIR;
+                if(isSecond) {
+                    if(card > _primaryCard) {
+                        _secondaryCard = _primaryCard;
+                        _primaryCard = card;
+                    } else if(card > _secondaryCard) {
+                        _secondaryCard = card;
+                    }
+                } else {
+                    isSecond = true;
+                    _primaryCard = card;
+                }
             }
         }
-        return pairs/2;
+        _best_pair_rank = _primaryCard;
+    }
+    
+    private void SetHighCardFlag(List<Card> cards) {
+        if(_flag > (int)CombinationType.HIGH_CARD) {
+            return;
+        }
+        int len = cards.Count;
+        _primaryCard = cards[len-1];
+        _secondaryCard = cards[len-2];
+    }
+    
+    private void SetFullHouseFlag(List<Card> cards) {
+        var full_house_flag = (int)CombinationType.THREE_OF_A_KIND | (int)CombinationType.PAIR;
+        if((_flag & full_house_flag) == 0) {
+            return;
+        }
+        _flag |= (int)CombinationType.FULL_HOUSE;
+        _primaryCard = _best_triple_rank;
+        _secondaryCard = _best_pair_rank;
+    }
+    private void SetStraightFlushFlag(List<Card> cards) {
+        var straight_flush_flag = (int)CombinationType.STRAIGHT | (int)CombinationType.FLUSH;
+        if((_flag & straight_flush_flag) == 0) {
+            return;
+        }
+        _flag |= (int)CombinationType.STRAIGHT_FLUSH;
+        _primaryCard = _low_straight_card;
+        _secondaryCard = _flush_color;
+    }
+    private void SetRoyalFlushFlag(List<Card> cards) {
+        if((_flag & (int)CombinationType.STRAIGHT_FLUSH) == 0 || _low_straight_card.Rank != 10) {
+            return;
+        }
+        _flag |= (int)CombinationType.ROYAL_FLUSH;
     }
 
 }
