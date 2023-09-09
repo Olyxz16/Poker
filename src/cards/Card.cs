@@ -1,6 +1,6 @@
 namespace Poker.Cards;
 
-public class Card
+public struct Card
 {
 
     public int Rank { get; private set;}
