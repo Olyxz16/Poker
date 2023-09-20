@@ -1,6 +1,3 @@
-
-using Poker.Cards;
-
 namespace Poker.Players;
 
 public class ConsolePlayer : Player
