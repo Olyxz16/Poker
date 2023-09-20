@@ -57,7 +57,6 @@ public class Game
             PlayRound(remainingPlayers);
         }
         var winner = ComputeWinner();
-        winner.Balance += _bank;
         return winner;
     }
 
@@ -98,12 +97,34 @@ public class Game
         }
     }
 
-    private Player ComputeWinner() {
+    private Player? ComputeWinner() {
         var winner = _players[0];
+        var drawPlayers = new HashSet<Player>();
         for(int i = 0 ; i < _players.Count ; i++) {
-            winner = Combination.Compare(winner, _players[i], _flop);
+            var newWinner = Combination.Compare(winner, _players[i], _flop);
+            if(newWinner == null) {
+                drawPlayers.Add(winner);
+                drawPlayers.Add(_players[i]);
+                continue;
+            }
+            if(newWinner != winner) {
+                drawPlayers.Clear();
+            }
+            winner = newWinner;
         }
-        return winner; 
+        if(drawPlayers.Count != 0) {
+            ResolveDraw(drawPlayers);
+            return null;
+        }
+        winner.Balance += _bank;
+        return winner;
+    }
+
+    private void ResolveDraw(IEnumerable<Player> players) {
+        int value = _bank / players.Count();
+        foreach(var player in players) {
+            player.Balance += value;
+        }
     }
 
 
