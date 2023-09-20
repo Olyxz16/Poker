@@ -25,6 +25,9 @@ public struct Card
         return $"{rankString} of {colorString}";
     }
 
+    public override bool Equals(object obj) => obj != null && this == (Card)obj;
+    public override int GetHashCode() => base.GetHashCode();
+
 
     public static bool operator ==(Card a, Card b)
     {
