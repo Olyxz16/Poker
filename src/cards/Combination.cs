@@ -168,11 +168,11 @@ public struct Combination
         if(_flag > (int)CombinationType.THREE_OF_A_KIND) {
             return;
         }
-        bool isSecond = false;
+        bool hasOneTriplet = false;
         foreach(var card in cards) {
             if(cards.FindAll(c => c == card).Count == 3) {
                 _flag |= (int)CombinationType.THREE_OF_A_KIND;
-                if(isSecond) {
+                if(hasOneTriplet && card != _primaryCard) {
                     if(card > _primaryCard) {
                         _secondaryCard = _primaryCard;
                         _primaryCard = card;
@@ -180,8 +180,9 @@ public struct Combination
                         _secondaryCard = card;
                     }
                 } else {
-                    isSecond = true;
+                    hasOneTriplet = true;
                     _primaryCard = card;
+                    _secondaryCard = new();
                 }
             }
         }
