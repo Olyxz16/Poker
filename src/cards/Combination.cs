@@ -86,7 +86,6 @@ public struct Combination
             };
             case >= (int)CombinationType.PAIR : {
                 if(c1._primaryCard == c2._primaryCard) {
-                    return null;
                     var hc1 = c1._primaryCard == p1.Hand[0] ? p1.Hand[0] : p1.Hand[1];
                     var hc2 = c2._primaryCard == p2.Hand[0] ? p2.Hand[0] : p2.Hand[1];
                     return hc1 > hc2 ? p1 : p2;
@@ -160,7 +159,7 @@ public struct Combination
             if(cards.FindAll(c => c == card).Count == 4) {
                 _flag |= (int)CombinationType.FOUR_OF_A_KIND;
                 _primaryCard = card;
-                return ;
+                return;
             }
         }
     }
