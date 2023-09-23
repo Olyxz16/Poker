@@ -213,6 +213,7 @@ public struct Combination
         if(_flag > (int)CombinationType.HIGH_CARD) {
             return;
         }
+        _flag = (int)CombinationType.HIGH_CARD;
         int len = cards.Count;
         _primaryCard = cards[len-1];
         _secondaryCard = cards[len-2];
