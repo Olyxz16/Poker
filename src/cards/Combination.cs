@@ -226,7 +226,7 @@ public struct Combination
     
     private void SetFullHouseFlag(List<Card> cards) {
         var full_house_flag = (int)CombinationType.THREE_OF_A_KIND | (int)CombinationType.PAIR;
-        if((_flag & full_house_flag) == 0) {
+        if((_flag & full_house_flag) != (int)CombinationType.FULL_HOUSE) {
             return;
         }
         _flag |= (int)CombinationType.FULL_HOUSE;
@@ -235,7 +235,7 @@ public struct Combination
     }
     private void SetStraightFlushFlag(List<Card> cards) {
         var straight_flush_flag = (int)CombinationType.STRAIGHT | (int)CombinationType.FLUSH;
-        if((_flag & straight_flush_flag) == 0) {
+        if((_flag & straight_flush_flag) != (int)CombinationType.STRAIGHT_FLUSH) {
             return;
         }
         _flag |= (int)CombinationType.STRAIGHT_FLUSH;
