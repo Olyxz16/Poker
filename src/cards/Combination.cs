@@ -193,11 +193,11 @@ public struct Combination
             return;
         }
         bool isSecond = false;
-        int pairs = 0;
-        foreach(var card in cards){
+        foreach(var card in cards) {
             if(cards.FindAll(c => c == card).Count == 2) {
-                _flag |= pairs > 1 ? (int)CombinationType.TWO_PAIR : (int)CombinationType.PAIR;
-                if(isSecond) {
+                _flag |= (int)CombinationType.PAIR;
+                if(isSecond && card != _primaryCard) {
+                    _flag |= (int)CombinationType.TWO_PAIR;
                     if(card > _primaryCard) {
                         _secondaryCard = _primaryCard;
                         _primaryCard = card;
@@ -207,6 +207,7 @@ public struct Combination
                 } else {
                     isSecond = true;
                     _primaryCard = card;
+                    _secondaryCard = new();
                 }
             }
         }
