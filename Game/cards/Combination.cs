@@ -122,7 +122,7 @@ public struct Combination
             return;
         }
         foreach(var card in cards) {
-            var color = cards[0].Color;
+            var color = card.Color;
             var flush_cards = cards.FindAll(card => card.Color == color);
             if(flush_cards.Count >= 5) {
                 _flag |= (int)CombinationType.FLUSH;
