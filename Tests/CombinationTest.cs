@@ -237,7 +237,7 @@ public class CombinationTest
     }
 
     [Fact]
-    public void Two_Pair_On_Flop_Best_Hand_Pair2() {
+    public void Two_Pair_On_Flop_Worst_Hand_Pair() {
         var flop = new List<Card>() {
             new(10, CardColor.CLUB),
             new(10, CardColor.DIAMOND),
