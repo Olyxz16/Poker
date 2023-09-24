@@ -127,7 +127,7 @@ public struct Combination
             if(flush_cards.Count >= 5) {
                 _flag |= (int)CombinationType.FLUSH;
                 _flush_color = card;
-                _flush_cards = (List<Card>)flush_cards.OrderByDescending(card => card.Rank);
+                _flush_cards = flush_cards.OrderByDescending(card => card.Rank).ToList();
                 return;
             }
         }
