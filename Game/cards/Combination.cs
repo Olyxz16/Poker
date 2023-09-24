@@ -73,6 +73,9 @@ public struct Combination
                 return c1._low_straight_card > c2._low_straight_card ? p1 : p2;
             };
             case >= (int)CombinationType.THREE_OF_A_KIND : {
+                if(c1._primaryCard == c2._primaryCard) {
+                    return null;
+                }
                 return c1._primaryCard > c2._primaryCard ? p1 : p2;
             };
             case >= (int)CombinationType.TWO_PAIR : {
