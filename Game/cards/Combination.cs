@@ -164,9 +164,6 @@ public struct Combination
         }
     }
     private void SetThreeOfAKindFlag(List<Card> cards) {
-        if(_flag > (int)CombinationType.THREE_OF_A_KIND) {
-            return;
-        }
         bool hasOneTriplet = false;
         foreach(var card in cards) {
             if(cards.FindAll(c => c == card).Count == 3) {
@@ -188,9 +185,6 @@ public struct Combination
         _best_triple_rank = _primaryCard;
     }
     private void SetPairsFlag(List<Card> cards) {
-        if(_flag > (int)CombinationType.PAIR) {
-            return;
-        }
         bool isSecond = false;
         foreach(var card in cards) {
             if(cards.FindAll(c => c == card).Count == 2) {
@@ -225,7 +219,7 @@ public struct Combination
     
     private void SetFullHouseFlag(List<Card> cards) {
         var full_house_flag = (int)CombinationType.THREE_OF_A_KIND | (int)CombinationType.PAIR;
-        if((_flag & full_house_flag) != (int)CombinationType.FULL_HOUSE) {
+        if((_flag & full_house_flag) != full_house_flag) {
             return;
         }
         _flag |= (int)CombinationType.FULL_HOUSE;
