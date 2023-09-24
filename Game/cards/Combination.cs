@@ -18,7 +18,7 @@ public struct Combination
     private List<Card> _flush_cards;
 
 
-    private Combination(Player player, List<Card> flop) {
+    public Combination(Player player, List<Card> flop) {
         _flag = 0;
         _flush_cards = new List<Card>();
         var cards = OrderCards(player, flop);
@@ -244,6 +244,25 @@ public struct Combination
         }
         _flag |= (int)CombinationType.ROYAL_FLUSH;
     }
+
+
+
+    public CombinationType GetCombinationType() {
+        return _flag switch {
+            >= (int)CombinationType.ROYAL_FLUSH => CombinationType.ROYAL_FLUSH,
+            >= (int)CombinationType.STRAIGHT_FLUSH => CombinationType.STRAIGHT_FLUSH,
+            >= (int)CombinationType.FOUR_OF_A_KIND => CombinationType.FOUR_OF_A_KIND,
+            >= (int)CombinationType.FULL_HOUSE => CombinationType.FULL_HOUSE,
+            >= (int)CombinationType.FLUSH => CombinationType.FLUSH,
+            >= (int)CombinationType.STRAIGHT => CombinationType.STRAIGHT,
+            >= (int)CombinationType.THREE_OF_A_KIND => CombinationType.THREE_OF_A_KIND,
+            >= (int)CombinationType.TWO_PAIR => CombinationType.TWO_PAIR,
+            >= (int)CombinationType.PAIR => CombinationType.PAIR,
+            >= (int)CombinationType.HIGH_CARD => CombinationType.HIGH_CARD,
+            _ => 0
+        };
+    }
+
 
 }
 
