@@ -1,7 +1,8 @@
 using Poker.Players;
 using Poker.Cards;
+using Poker;
 
-namespace Poker.Testing;
+namespace PokerTesting;
 
 public class TestGame : Game
 {
