@@ -2,7 +2,7 @@ using Poker.Players;
 using Poker.Cards;
 using Poker;
 
-namespace PokerTesting;
+namespace Tests.TestTypes;
 
 public class TestGame : Game
 {

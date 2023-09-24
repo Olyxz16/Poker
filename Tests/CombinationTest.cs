@@ -1,6 +1,7 @@
 using Poker.Cards;
+using Tests.TestTypes;
 
-namespace PokerTesting;
+namespace Tests;
 
 public class CombinationTest
 {
