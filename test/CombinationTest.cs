@@ -217,4 +217,39 @@ public class CombinationTest
         Assert.Same(winner, p2);
     }
 
+
+    [Fact]
+    public void Two_Pair_On_Flop_Best_Hand_Pair() {
+        var flop = new List<Card>() {
+            new(10, CardColor.CLUB),
+            new(10, CardColor.DIAMOND),
+            new(6, CardColor.CLUB),
+            new(6, CardColor.HEART),
+            new(12, CardColor.SPADE)   
+        };
+        var p1 = new TestPlayer(100);
+        p1.DrawHand(new(12, CardColor.CLUB), new(3, CardColor.SPADE));
+        var p2 = new TestPlayer(100);
+        p2.DrawHand(new(13, CardColor.HEART), new(4, CardColor.SPADE));
+        var winner = Combination.Compare(p1, p2, flop);
+        Assert.Same(winner, p1);
+    }
+
+    [Fact]
+    public void Two_Pair_On_Flop_Best_Hand_Pair2() {
+        var flop = new List<Card>() {
+            new(10, CardColor.CLUB),
+            new(10, CardColor.DIAMOND),
+            new(6, CardColor.CLUB),
+            new(6, CardColor.HEART),
+            new(4, CardColor.SPADE)   
+        };
+        var p1 = new TestPlayer(100);
+        p1.DrawHand(new(4, CardColor.CLUB), new(3, CardColor.SPADE));
+        var p2 = new TestPlayer(100);
+        p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.SPADE));
+        var winner = Combination.Compare(p1, p2, flop);
+        Assert.Null(winner);
+    }
+
 }
