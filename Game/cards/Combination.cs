@@ -236,7 +236,7 @@ public struct Combination
         _secondaryCard = _flush_color;
     }
     private void SetRoyalFlushFlag(List<Card> cards) {
-        if((_flag & (int)CombinationType.STRAIGHT_FLUSH) == 0 || _low_straight_card.Rank != 10) {
+        if(_flag < (int)CombinationType.STRAIGHT_FLUSH || _low_straight_card.Rank != 10) {
             return;
         }
         _flag |= (int)CombinationType.ROYAL_FLUSH;
