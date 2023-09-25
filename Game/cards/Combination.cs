@@ -118,9 +118,6 @@ public struct Combination
 
 
     private void SetFlushFlag(List<Card> cards) {
-        if(_flag > (int)CombinationType.FLUSH) {
-            return;
-        }
         foreach(var card in cards) {
             var color = card.Color;
             var flush_cards = cards.FindAll(card => card.Color == color);
@@ -133,9 +130,6 @@ public struct Combination
         }
     }
     private void SetStraightFlag(List<Card> cards) {
-        if(_flag > (int)CombinationType.STRAIGHT) {
-            return;
-        }
         for(int startIndex = 0 ; startIndex < 3 ; startIndex++) {
             var pivotCard = cards[startIndex];
             bool isStraight = true;
