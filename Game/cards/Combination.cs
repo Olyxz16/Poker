@@ -228,7 +228,7 @@ public struct Combination
     }
     private void SetStraightFlushFlag(List<Card> cards) {
         var straight_flush_flag = (int)CombinationType.STRAIGHT | (int)CombinationType.FLUSH;
-        if((_flag & straight_flush_flag) != (int)CombinationType.STRAIGHT_FLUSH) {
+        if((_flag & straight_flush_flag) != straight_flush_flag) {
             return;
         }
         _flag |= (int)CombinationType.STRAIGHT_FLUSH;
