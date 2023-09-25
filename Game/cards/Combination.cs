@@ -130,20 +130,46 @@ public struct Combination
         }
     }
     private void SetStraightFlag(List<Card> cards) {
-        for(int startIndex = 0 ; startIndex < 3 ; startIndex++) {
-            var pivotCard = cards[startIndex];
-            bool isStraight = true;
-            for(int cardIndex = 1 ; cardIndex < 5 ; cardIndex++) {
-                if(cards[startIndex+cardIndex].Rank != pivotCard.Rank+cardIndex) {
-                    isStraight = false;
+        var straight_cards = new List<Card>();
+        int startIndex = 0;
+        while(startIndex < 6) {
+            var res = new List<Card>();
+            int pivotIndex = startIndex;
+            while(pivotIndex < 7) {
+                if(pivotIndex == 6) {
+                    if(cards[pivotIndex].Rank == 13 && cards[0].Rank == 1  ) {
+                        res.Add(cards[pivotIndex]);
+                        res.Add(cards[0]);
+                    }
                     break;
                 }
+                if(cards[pivotIndex].Rank == 13 && cards[0].Rank == 1  ) {
+                    res.Add(cards[pivotIndex]);
+                    res.Add(cards[0]);
+                    break;
+                }
+                int currentRank = cards[pivotIndex].Rank;
+                int nextRank = cards[pivotIndex+1].Rank;
+                if(Math.Abs(nextRank-currentRank) > 1) {
+                    res.Add(cards[pivotIndex]);
+                    break;
+                }
+                if(nextRank == currentRank + 1) {
+                    res.Add(cards[pivotIndex]);
+                }
+                pivotIndex++;
             }
-            if(isStraight) {
-                _flag |= (int)CombinationType.STRAIGHT;
-                _low_straight_card = pivotCard;
+            if(res.Count >= 5) {
+                straight_cards = res;
             }
+            startIndex++;
         }
+        if(straight_cards.Count >= 5) {
+            straight_cards = straight_cards.TakeLast(5).ToList();
+            _flag |= (int)CombinationType.STRAIGHT;
+            _low_straight_card = straight_cards[0];
+        }
+        
     }
     private void SetFourOfAKindFlag(List<Card> cards) {
         if(_flag > (int)CombinationType.FOUR_OF_A_KIND) {
