@@ -343,6 +343,26 @@ public class CombinationTest
     }
 
 
+    [Fact]
+    public void Straight_Neutral3() {
+        var flop = new List<Card>() {
+            new(1, CardColor.CLUB),
+            new(2, CardColor.DIAMOND),
+            new(3, CardColor.CLUB),
+            new(10, CardColor.HEART),
+            new(13, CardColor.SPADE)   
+        };
+        var p1 = new TestPlayer(100);
+        p1.DrawHand(new(12, CardColor.CLUB), new(11, CardColor.SPADE));
+        var p2 = new TestPlayer(100);
+        p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.SPADE));
+        var c1 = new Combination(p1, flop);
+        Assert.Equal(CombinationType.STRAIGHT, c1.GetCombinationType());
+        var winner = Combination.Compare(p1, p2, flop);
+        Assert.Same(winner, p1);
+    }
+
+
 
 
     /// <summary>
