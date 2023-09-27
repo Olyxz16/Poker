@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker", "Game\Poker.csproj"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Tests\Test.csproj", "{134AC3AF-1811-40CF-802F-7A41070C3EDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basic", "Examples\Basic\Basic.csproj", "{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,13 +22,13 @@ Global
 		{1A683FB6-03ED-4445-BE65-229395BC4AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A683FB6-03ED-4445-BE65-229395BC4AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A683FB6-03ED-4445-BE65-229395BC4AF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E9704C6-37E6-4FDD-9DA6-627808309A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E9704C6-37E6-4FDD-9DA6-627808309A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E9704C6-37E6-4FDD-9DA6-627808309A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E9704C6-37E6-4FDD-9DA6-627808309A60}.Release|Any CPU.Build.0 = Release|Any CPU
 		{134AC3AF-1811-40CF-802F-7A41070C3EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{134AC3AF-1811-40CF-802F-7A41070C3EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{134AC3AF-1811-40CF-802F-7A41070C3EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{134AC3AF-1811-40CF-802F-7A41070C3EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
