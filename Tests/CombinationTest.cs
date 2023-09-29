@@ -557,6 +557,22 @@ public class CombinationTest
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p2);
     }
+
+    [Fact]
+    public void Flush_And_Straight_But_Not_Straight_Flush() {
+        var flop = new List<Card>() {
+            new(8, CardColor.CLUB),
+            new(2, CardColor.CLUB),
+            new(5, CardColor.CLUB),
+            new(1, CardColor.HEART),
+            new(3, CardColor.CLUB)   
+        };
+        var p1 = new TestPlayer(100);
+        p1.DrawHand(new(4, CardColor.SPADE), new(3, CardColor.CLUB));
+        var c1 = new Combination(p1, flop);
+        Assert.Equal(CombinationType.FLUSH, c1.GetCombinationType());
+    }
+    
     
 
 
