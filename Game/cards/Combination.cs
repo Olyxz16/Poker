@@ -13,13 +13,14 @@ public struct Combination
     private Card _best_triple_rank;
     private Card _best_pair_rank;
 
-    private Card _low_straight_card;
-    private Card _flush_color;
+    private readonly Card Low_straight_card => _straight_cards[0];
+    private List<Card> _straight_cards;
     private List<Card> _flush_cards;
 
 
     public Combination(Player player, List<Card> flop) {
         _flag = 0;
+        _straight_cards = new List<Card>();
         _flush_cards = new List<Card>();
         var cards = OrderCards(player, flop);
         SetFlushFlag(cards);
@@ -46,10 +47,10 @@ public struct Combination
 
         switch(c1._flag) {
             case >= (int)CombinationType.STRAIGHT_FLUSH : {
-                if(c1._low_straight_card == c2._low_straight_card) {
+                if(c1.Low_straight_card == c2.Low_straight_card) {
                     return null;
                 }
-                return c1._low_straight_card > c2._low_straight_card ? p1 : p2;
+                return c1.Low_straight_card > c2.Low_straight_card ? p1 : p2;
             };
             case >= (int)CombinationType.FOUR_OF_A_KIND : {
                 return c1._primaryCard > c2._primaryCard ? p1 : p2;
@@ -67,10 +68,10 @@ public struct Combination
                 return null;
             };
             case >= (int)CombinationType.STRAIGHT : {
-                if(c1._low_straight_card == c2._low_straight_card) {
+                if(c1.Low_straight_card == c2.Low_straight_card) {
                     return null;
                 }
-                return c1._low_straight_card > c2._low_straight_card ? p1 : p2;
+                return c1.Low_straight_card > c2.Low_straight_card ? p1 : p2;
             };
             case >= (int)CombinationType.THREE_OF_A_KIND : {
                 if(c1._primaryCard == c2._primaryCard) {
@@ -123,8 +124,7 @@ public struct Combination
             var flush_cards = cards.FindAll(card => card.Color == color);
             if(flush_cards.Count >= 5) {
                 _flag |= (int)CombinationType.FLUSH;
-                _flush_color = card;
-                _flush_cards = flush_cards.OrderByDescending(card => card.Rank).ToList();
+                _flush_cards = flush_cards.ToList();
                 return;
             }
         }
@@ -165,9 +165,8 @@ public struct Combination
             startIndex++;
         }
         if(straight_cards.Count >= 5) {
-            straight_cards = straight_cards.TakeLast(5).ToList();
             _flag |= (int)CombinationType.STRAIGHT;
-            _low_straight_card = straight_cards[0];
+            _straight_cards = straight_cards.TakeLast(5).ToList();
         }
         
     }
@@ -251,12 +250,17 @@ public struct Combination
         if((_flag & straight_flush_flag) != straight_flush_flag) {
             return;
         }
-        _flag |= (int)CombinationType.STRAIGHT_FLUSH;
-        _primaryCard = _low_straight_card;
-        _secondaryCard = _flush_color;
+        if(ContainsOtherList(_flush_cards, _straight_cards)) {
+            _flag |= (int)CombinationType.STRAIGHT_FLUSH;
+            _primaryCard = Low_straight_card;
+            //_secondaryCard = _flush_color;
+        }
+    }
+    private bool ContainsOtherList(List<Card> l1, List<Card> l2) {
+            return l2.All(l1.Contains);
     }
     private void SetRoyalFlushFlag(List<Card> cards) {
-        if(_flag < (int)CombinationType.STRAIGHT_FLUSH || _low_straight_card.Rank != 10) {
+        if(_flag < (int)CombinationType.STRAIGHT_FLUSH || Low_straight_card.Rank != 10) {
             return;
         }
         _flag |= (int)CombinationType.ROYAL_FLUSH;
