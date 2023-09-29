@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\Game\Poker.csproj" />
+    <ProjectReference Include="..\..\Game\Poker.csproj" />
   </ItemGroup>
 
 </Project>
