@@ -8,8 +8,8 @@ public abstract class Player
     public int Balance;
 
     // Protect this to avoid being able to have more than 2 cards.
-    protected List<Card> _hand;
-    public IReadOnlyList<Card> Hand { get => _hand; }
+    private List<Card> _hand;
+    public IReadOnlyList<Card> Hand => _hand;
 
     public Player(int balance) {
         Balance = balance;
