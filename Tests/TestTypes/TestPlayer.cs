@@ -27,7 +27,7 @@ public class TestPlayer : Player
         return moves.Dequeue();
     }
 
-    protected override void DisplayErrorMessage(string message)
-    {}
-    
+    protected override void DisplayErrorMessage(string message) {}
+
+    protected override void DisplayGameState(GameState state) {}
 }

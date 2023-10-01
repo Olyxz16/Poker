@@ -17,10 +17,12 @@ public abstract class Player
     }
 
     protected abstract Move ChoseMove(GameState state);
+    protected abstract void DisplayGameState(GameState state);
     protected abstract void DisplayErrorMessage(string message);
     
 
     public Move Play(GameState state) {
+        DisplayGameState(state);
         Move chosenMove = ChoseMove(state);
         while(!Move.IsValid(state, chosenMove, out string errorMessage))
         {
