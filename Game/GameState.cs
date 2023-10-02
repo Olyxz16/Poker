@@ -16,7 +16,12 @@ public struct GameState
         Turn = turn;
         Player = player;
         Bets = bets;
-        Flop = flop;
+        Flop = turn switch {
+            1 => flop.Take(0).ToList(),
+            2 => flop.Take(3).ToList(),
+            3 => flop.Take(4).ToList(),
+            _ => flop.Take(5).ToList()
+        };
     }
 
 }
