@@ -1,4 +1,3 @@
-using System;
 using GUISharp;
 using GUISharp.Components;
 using Poker.Players.UI;
