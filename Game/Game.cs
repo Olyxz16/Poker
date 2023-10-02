@@ -44,13 +44,13 @@ public class Game
     public Player Play() {
         Player winner = _players[0];
         while(Players.Count > 1) {
-            winner = PlayGame();
+            winner = PlayGame() ?? winner;
             RemoveLosers();
         }
         return winner;
     }
 
-    private Player PlayGame() {
+    private Player? PlayGame() {
         InitGame();
         var remainingPlayers = new List<Player>(_players);
         for(int round = 1 ; round < 3 ; round++) {
