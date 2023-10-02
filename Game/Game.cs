@@ -85,7 +85,7 @@ public class Game
     }
 
     public GameState GetGameState(int turn, Player player) {
-        return new GameState(turn, player, _bets, _flop);
+        return new GameState(turn, _bank, player, _bets, _flop);
     }
 
 

@@ -7,13 +7,16 @@ public struct GameState
 {
 
     public readonly int Turn;
+    public readonly int Bank;
     public readonly Player Player;
     public IReadOnlyList<int> Bets;
     public IReadOnlyList<Card> Flop;
+    
 
 
-    public GameState(int turn, Player player, List<int> bets, List<Card> flop) {
+    public GameState(int turn, int bank, Player player, List<int> bets, List<Card> flop) {
         Turn = turn;
+        Bank = bank;
         Player = player;
         Bets = bets;
         Flop = turn switch {
