@@ -7,6 +7,7 @@ public class Frame
 
     public int SizeX { get; private set; }
     public int SizeY { get; private set; }
+    public (int X, int Y) Center => (SizeX/2, SizeY/2);
 
     private readonly char[,] characters;
 
