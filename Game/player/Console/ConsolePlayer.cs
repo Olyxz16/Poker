@@ -16,12 +16,12 @@ public class ConsolePlayer : Player
     protected override Move ChoseMove(GameState state)
     {
         var inputField = new InputField("Enter input : ");
-        frame.AddComponent(inputField, frame.Center.X - 7, frame.Center.Y + 2, true);
+        frame.AddComponent(inputField, frame.Center.X - 7, frame.Center.Y + 5, true);
         var input = inputField.Prompt();
         Move move;
         while(!IsValid(input ?? "", out move)) {
             var textField = new TextField("Invalid input.");
-            frame.AddComponent(textField, frame.Center.X - 7, frame.Center.Y + 3, true);
+            frame.AddComponent(textField, frame.Center.X - 7, frame.Center.Y + 6, true);
             input = inputField.Prompt();
         }
         return move;
