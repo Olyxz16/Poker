@@ -12,6 +12,16 @@ public class CardUI : Component
         SetCharAt(GetColChar(card), 2, 4);
     }
 
+    public static CardUI UnrevealedCard() {
+        CardUI result = new CardUI(new());
+        for(int i = 1 ; i < 4 ; i++) {
+            for(int j = 1 ; j < 6 ; j++) {
+                result._content[i,j] = '#';
+            }
+        }
+        return result;
+    }
+
     private char GetRankChar(Card card) {
         return card.Rank switch {
             1 => '1',
