@@ -1,4 +1,5 @@
-﻿using GUISharp.Components;
+﻿using System.Text;
+using GUISharp.Components;
 
 namespace GUISharp;
 
@@ -82,15 +83,17 @@ public class Frame
 
     public void Display() {
         Console.Clear();
+        var stringBuilder = new StringBuilder();
         for(int y = 0 ; y < SizeY-1 ; y++) {
             for(int x = 0 ; x < SizeX ; x++) {
-                Console.Write(characters[x,y]);
+                stringBuilder.Append(characters[x,y]);
             }
-            Console.WriteLine();
+            stringBuilder.Append('\n');
         }
         for(int x = 0 ; x < SizeX ; x++) {
-            Console.Write(characters[x,SizeY-1]);
+            stringBuilder.Append(characters[x,SizeY-1]);
         }
+        Console.Write(stringBuilder.ToString());
     }
 
     public static Frame GetCurrentFrame() {
