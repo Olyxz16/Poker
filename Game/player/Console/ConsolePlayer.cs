@@ -74,6 +74,10 @@ public class ConsolePlayer : Player
         var balanceUI = new TextField(balanceText);
         frame.AddComponent(balanceUI, frame.SizeX - balanceText.Length - 4, frame.SizeY - 3);
 
+        string bankText = $"Bank: {state.Bank}";
+        var bankUI = new TextField(bankText);
+        frame.AddComponent(bankUI, frame.Center.X - bankUI.SizeX/2, frame.Center.Y + 2);
+
         frame.Display();
     }
 
