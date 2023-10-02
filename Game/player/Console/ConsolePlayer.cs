@@ -52,9 +52,27 @@ public class ConsolePlayer : Player
         frame.SetBorder('*');
         
         var HandCard1UI = new CardUI(Hand[0]);
-        frame.AddComponent(HandCard1UI, 5, 20);
+        frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
         var HandCard2UI = new CardUI(Hand[1]);
-        frame.AddComponent(HandCard2UI, 15, 20);
+        frame.AddComponent(HandCard2UI, frame.Center.X - HandCard2UI.SizeX/2 + 6, frame.Center.Y + 10);
+
+        int xOff = frame.Center.X;
+        int yOff = frame.Center.Y - 6;
+        int xMargin = 7;
+        for(int i = 0 ; i < 5 ; i++) {
+            CardUI ui;
+            if(i < state.Flop.Count) {
+                ui = new CardUI(state.Flop[i]);
+            } else {
+                ui = CardUI.UnrevealedCard();
+            }
+            int xPos = xOff - ui.PosX/2 + (i-2) * xMargin;
+            frame.AddComponent(ui, xPos, yOff);
+        }
+
+        string balanceText = $"Balance: {state.Player.Balance}";
+        var balanceUI = new TextField(balanceText);
+        frame.AddComponent(balanceUI, frame.SizeX - balanceText.Length - 4, frame.SizeY - 3);
 
         frame.Display();
     }
