@@ -63,19 +63,19 @@ public class Frame
         Console.SetCursorPosition(x,y);
     }
     
-    public void AddComponent(Component component, Location location) {
-        if(component.SizeX+location.MinX >= SizeX || component.SizeY+location.MinY >= SizeY) {
+    public void AddComponent(Component component, int xOff, int yOff, bool refresh = false) {
+        if(component.SizeX+xOff >= SizeX || component.SizeY+yOff >= SizeY) {
             throw new ArgumentOutOfRangeException();
         }
-        int XOff = location.MinX;
-        int YOff = location.MinY;
-        component.SetLocation(location);
         for(int x = 0 ; x < component.SizeX ; x++) {
             for(int y = 0 ; y < component.SizeY ; y++) {
-                int PosX = x+XOff;
-                int PosY = y+YOff;
+                int PosX = x+xOff;
+                int PosY = y+yOff;
                 characters[PosX, PosY] = component.Content[x,y];
             }
+        }
+        if(refresh) {
+            Display();
         }
     }
 

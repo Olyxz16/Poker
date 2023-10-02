@@ -2,7 +2,8 @@ namespace GUISharp.Components;
 
 public abstract class Component {
 
-    protected Location _location;
+    public int PosX { get; private set; }
+    public int PosY { get; private set; }
 
     public int SizeX => _content.GetLength(0);
     public int SizeY => _content.GetLength(1);
@@ -19,10 +20,11 @@ public abstract class Component {
         }
     }
 
+    protected void SetPosition(int x, int y) {
+        PosX = x;
+        PosY = y;
+    }   
 
-    public void SetLocation(Location location) {
-        _location = location;
-    }
     public void SetCharAt(char c, int x, int y) {
         if(x < 0 || x >= SizeX || y < 0 || y >= SizeY) {
             throw new IndexOutOfRangeException("");

@@ -14,9 +14,10 @@ public class InputField : Component
         }
     }
 
+    
     public string Prompt() {
         (int PreviousCursorX, int PreviousCursorY) = Console.GetCursorPosition();
-        Console.SetCursorPosition(_location.MinX + _prompt.Length, _location.MinY);
+        Console.SetCursorPosition(PosX + _prompt.Length, PosY);
         var result = Console.ReadLine() ?? "";
         Console.SetCursorPosition(PreviousCursorX, PreviousCursorY);
         return result;

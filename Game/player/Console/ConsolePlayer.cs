@@ -8,7 +8,7 @@ namespace Poker.Players;
 public class ConsolePlayer : Player
 {
 
-    private Frame frame;
+    private readonly Frame frame;
 
     public ConsolePlayer(int balance) : base(balance) {
         frame = Frame.GetCurrentFrame();
@@ -17,14 +17,12 @@ public class ConsolePlayer : Player
     protected override Move ChoseMove(GameState state)
     {
         var inputField = new InputField("Enter input : ");
-        frame.AddComponent(inputField, new(new(10, 15), new(24, 15)));
-        frame.Display();
+        frame.AddComponent(inputField, 10, 15, true);
         var input = inputField.Prompt();
         Move move;
         while(!IsValid(input ?? "", out move)) {
             var textField = new TextField("Invalid input.");
-            frame.AddComponent(textField, new(new(10,16), new(23,16)));
-            frame.Display();
+            frame.AddComponent(textField, 10, 23, true);
             input = inputField.Prompt();
         }
         return move;
@@ -55,9 +53,9 @@ public class ConsolePlayer : Player
         frame.SetBorder('*');
         
         var HandCard1UI = new CardUI(Hand[0]);
-        frame.AddComponent(HandCard1UI, new(new(5, 20), new(10, 20)));
+        frame.AddComponent(HandCard1UI, 5, 20);
         var HandCard2UI = new CardUI(Hand[1]);
-        frame.AddComponent(HandCard2UI, new(new(25, 20), new(30, 20)));
+        frame.AddComponent(HandCard2UI, 15, 20);
 
         frame.Display();
     }
