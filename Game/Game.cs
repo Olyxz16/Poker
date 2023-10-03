@@ -21,6 +21,7 @@ public class Game
 
     protected Deck _deck;
     protected int _bank;
+    protected int _round;
 
 
     public Game(List<Player> players) {
@@ -53,7 +54,7 @@ public class Game
     private Player? PlayGame() {
         InitGame();
         var remainingPlayers = new List<Player>(_players);
-        for(int round = 1 ; round < 3 ; round++) {
+        for(_round = 1 ; _round < 3 ; _round++) {
             PlayRound(remainingPlayers);
         }
         var winner = ComputeWinner();
@@ -85,7 +86,7 @@ public class Game
     }
 
     public GameState GetGameState(int turn, Player player) {
-        return new GameState(turn, _bank, player, _bets, _flop);
+        return new GameState(_round, turn, _bank, player, _bets, _flop);
     }
 
 
