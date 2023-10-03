@@ -6,13 +6,16 @@ public abstract class Player
 {
     
     public int Balance;
+    public string Name;
 
     // Protect this to avoid being able to have more than 2 cards.
     private List<Card> _hand;
     public IReadOnlyList<Card> Hand => _hand;
 
-    public Player(int balance) {
+    public Player(int balance): this(balance, RandomName()) {}
+    public Player(int balance, string name) {
         Balance = balance;
+        Name = name;
         _hand = new List<Card>(2);
     }
 
@@ -40,6 +43,10 @@ public abstract class Player
             throw new ArgumentException("Too much cards drawn");
         }
         _hand = cards;
+    }
+
+    private static string RandomName() {
+        return $"Player-{new Random().Next()}";
     }
 
 }
