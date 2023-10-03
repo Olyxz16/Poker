@@ -33,6 +33,7 @@ public class Game
         _deck = GetNewShuffledDeck();
 
         _bank = 0;
+        _round = 0;
 
     }
 
