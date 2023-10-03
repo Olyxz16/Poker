@@ -69,6 +69,7 @@ public class Frame
         if(component.SizeX+xOff >= SizeX || component.SizeY+yOff >= SizeY) {
             throw new ArgumentOutOfRangeException();
         }
+        component.SetPosition(xOff, yOff);
         for(int x = 0 ; x < component.SizeX ; x++) {
             for(int y = 0 ; y < component.SizeY ; y++) {
                 int PosX = x+xOff;

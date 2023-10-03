@@ -20,7 +20,7 @@ public abstract class Component {
         }
     }
 
-    protected void SetPosition(int x, int y) {
+    internal void SetPosition(int x, int y) {
         PosX = x;
         PosY = y;
     }   
