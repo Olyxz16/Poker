@@ -71,6 +71,9 @@ public class ConsolePlayer : Player
             frame.AddComponent(ui, xPos, yOff);
         }
 
+        var nameUI = new TextField(Name);
+        frame.AddComponent(nameUI, 4, 2);
+
         string balanceText = $"Balance: {state.Player.Balance}";
         var balanceUI = new TextField(balanceText);
         frame.AddComponent(balanceUI, frame.SizeX - balanceText.Length - 4, frame.SizeY - 3);
