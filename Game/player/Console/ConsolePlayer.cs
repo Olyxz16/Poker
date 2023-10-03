@@ -11,6 +11,7 @@ public class ConsolePlayer : Player
 
     public ConsolePlayer(int balance) : base(balance) {
         frame = Frame.GetCurrentFrame();
+        Name = $"Player-{PLAYER_COUNT++}";
     }
 
     protected override Move ChoseMove(GameState state)

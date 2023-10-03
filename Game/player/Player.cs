@@ -4,6 +4,8 @@ namespace Poker.Players;
 
 public abstract class Player
 {
+
+    protected static int PLAYER_COUNT = 1;
     
     public int Balance;
     public string Name;
