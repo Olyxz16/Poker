@@ -55,7 +55,7 @@ public class Game
     private Player? PlayGame() {
         InitGame();
         var remainingPlayers = new List<Player>(_players);
-        for(_round = 1 ; _round < 3 ; _round++) {
+        for(_round = 1 ; _round <= 4 ; _round++) {
             PlayRound(remainingPlayers);
         }
         var winner = ComputeWinner();
