@@ -96,6 +96,13 @@ public class Frame
         }
         Console.Write(stringBuilder.ToString());
     }
+    public void Reset() {
+        for(int x = 0 ; x < SizeX ; x++) {
+            for(int y = 0 ; y < SizeY ; y++) {
+                characters[x,y] = ' ';
+            }
+        }
+    }
 
     public static Frame GetCurrentFrame() {
         int sizeX = Console.WindowWidth;

@@ -50,6 +50,7 @@ public class ConsolePlayer : Player
 
 
     protected override void DisplayGameState(GameState state) {
+        frame.Reset();
         frame.SetBorder('*');
         
         var HandCard1UI = new CardUI(Hand[0]);
