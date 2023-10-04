@@ -24,27 +24,29 @@ public struct Move
 
     public static bool IsValid(GameState state, Move chosenMove, out string errorMessage) {
         
-        if(state.Turn == 1) {
-            if(chosenMove.MoveType == MoveType.FOLD) {
-                errorMessage = "You can't fold on first turn.";
-                return false;
+        if(state.Round == 1) {
+            if(state.Turn == 1) {
+                if(chosenMove.MoveType == MoveType.FOLD) {
+                    errorMessage = "You can't fold on first turn.";
+                    return false;
+                }
+                if(chosenMove.BetValue != Game.SMALL_BLIND) {
+                    errorMessage = $"You have to bet small blind : {Game.SMALL_BLIND}.";
+                    return false;
+                }
+                errorMessage = "";
+                return true;
             }
-            if(chosenMove.BetValue != Game.SMALL_BLIND) {
-                errorMessage = $"You have to bet small blind : {Game.SMALL_BLIND}.";
-                return false;
+            if(state.Turn == 2) {
+                if(chosenMove.BetValue != Game.BIG_BLIND) {
+                    errorMessage = $"You have to bet big blind : {Game.BIG_BLIND}.";
+                    return false;
+                }
+                errorMessage = "";
+                return true;
             }
-            errorMessage = "";
-            return true;
         }
-        if(state.Turn == 2) {
-            if(chosenMove.BetValue != Game.BIG_BLIND) {
-                errorMessage = $"You have to bet big blind : {Game.BIG_BLIND}.";
-                return false;
-            }
-            errorMessage = "";
-            return true;
-        }
-
+        
         if(chosenMove.MoveType == MoveType.FOLD) {
             errorMessage = "";
             return true;
