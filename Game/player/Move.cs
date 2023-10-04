@@ -52,8 +52,8 @@ public struct Move
             return true;
         }
 
-        var currentBet = state.Bets.Max();
-        if(chosenMove.BetValue < currentBet) {
+        var currentBet = state.Bets.Count > 0 ? state.Bets.Max() : 0;
+        if(state.Bets.Count > 0 && chosenMove.BetValue < currentBet) {
             errorMessage = $"You have to bet over {currentBet}";
             return false;
         }
