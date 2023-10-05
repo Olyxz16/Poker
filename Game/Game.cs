@@ -13,8 +13,8 @@ public class Game
     protected List<Player> _players;
     public IReadOnlyList<Player> Players => _players;
 
-    protected List<int> _bets;
-    public IReadOnlyList<int> Bets => _bets;
+    protected Dictionary<string, int> _bets;
+    public IReadOnlyDictionary<string, int> Bets => _bets;
 
     protected List<Card> _flop;
     public IReadOnlyList<Card> River => _flop;
@@ -27,7 +27,7 @@ public class Game
     public Game(List<Player> players) {
 
         _players = players;
-        _bets = new List<int>();
+        _bets = new Dictionary<string, int>();
         _flop = new List<Card>();
 
         _deck = GetNewShuffledDeck();
@@ -56,7 +56,10 @@ public class Game
         InitGame();
         var remainingPlayers = new List<Player>(_players);
         for(_round = 1 ; _round <= 4 ; _round++) {
+            _bets = new Dictionary<string, int>();
+            remainingPlayers.ForEach(p => _bets[p.Name] = 0);
             PlayRound(remainingPlayers);
+            SumPlayerBets();
         }
         var winner = ComputeWinner();
         return winner;
@@ -81,8 +84,14 @@ public class Game
                 remainingPlayers.Remove(player);
                 i--;
             } else if(move.MoveType == MoveType.BET) {
-                _bank += move.BetValue;
+                _bets[player.Name] += move.BetValue;
             }
+        }
+    }
+
+    private void SumPlayerBets() {
+        foreach(var bet in _bets.Values) {
+            _bank += bet;
         }
     }
 
