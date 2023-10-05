@@ -8,10 +8,12 @@ public class ConsolePlayer : Player
 {
 
     private readonly Frame frame;
+    private readonly TextField errorField;
 
     public ConsolePlayer(int balance) : base(balance) {
         frame = Frame.GetCurrentFrame();
         Name = $"Player-{PLAYER_COUNT++}";
+        errorField = new TextField("");
     }
 
     protected override Move ChoseMove(GameState state)
@@ -21,8 +23,8 @@ public class ConsolePlayer : Player
         var input = inputField.Prompt();
         Move move;
         while(!IsValid(input ?? "", out move)) {
-            var textField = new TextField("Invalid input.");
-            frame.AddComponent(textField, frame.Center.X - 7, frame.Center.Y + 6, true);
+            errorField.SetText("Invalid input.");
+            frame.AddComponent(errorField, frame.Center.X - 7, frame.Center.Y + 6, true);
             input = inputField.Prompt();
         }
         return move;
@@ -90,7 +92,8 @@ public class ConsolePlayer : Player
 
     protected override void DisplayErrorMessage(string message)
     {
-        Console.WriteLine(message);
+        errorField.SetText(message);
+        frame.AddComponent(errorField, frame.Center.X - 7, frame.Center.Y + 6, true);
     }
 
     
