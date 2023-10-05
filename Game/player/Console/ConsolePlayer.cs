@@ -57,6 +57,7 @@ public class ConsolePlayer : Player
         
         DisplayHand();
         DisplayFlop(state);
+        DisplayBets(state);
 
         var nameUI = new TextField(Name);
         frame.AddComponent(nameUI, 4, 2);
@@ -91,6 +92,22 @@ public class ConsolePlayer : Player
             }
             int xPos = xOff - ui.PosX/2 + (i-2) * xMargin;
             frame.AddComponent(ui, xPos, yOff);
+        }
+    }
+    private void DisplayBets(GameState state) {
+        var bets = state.Bets;
+        int count = bets.Count;
+        int xOff = frame.Center.X;
+        int yOff = frame.Center.Y - 10;
+        int xMargin = 10;
+        int index = 0;
+        foreach(var bet in bets) {
+            index++;
+            var nameField = new TextField(bet.Key);
+            var betField = new TextField(bet.Value.ToString());
+            int xPos = xOff - nameField.PosX/2 + (int)((index-(0.5f+count/2f)) * xMargin);
+            frame.AddComponent(nameField, xPos, yOff);
+            frame.AddComponent(betField, xPos, yOff+1);
         }
     }
     
