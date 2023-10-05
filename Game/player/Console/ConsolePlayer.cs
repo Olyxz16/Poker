@@ -55,24 +55,8 @@ public class ConsolePlayer : Player
         frame.Reset();
         frame.SetBorder('*');
         
-        var HandCard1UI = new CardUI(Hand[0]);
-        frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
-        var HandCard2UI = new CardUI(Hand[1]);
-        frame.AddComponent(HandCard2UI, frame.Center.X - HandCard2UI.SizeX/2 + 6, frame.Center.Y + 10);
-
-        int xOff = frame.Center.X;
-        int yOff = frame.Center.Y - 6;
-        int xMargin = 7;
-        for(int i = 0 ; i < 5 ; i++) {
-            CardUI ui;
-            if(i < state.Flop.Count) {
-                ui = new CardUI(state.Flop[i]);
-            } else {
-                ui = CardUI.UnrevealedCard();
-            }
-            int xPos = xOff - ui.PosX/2 + (i-2) * xMargin;
-            frame.AddComponent(ui, xPos, yOff);
-        }
+        DisplayHand();
+        DisplayFlop(state);
 
         var nameUI = new TextField(Name);
         frame.AddComponent(nameUI, 4, 2);
@@ -88,6 +72,27 @@ public class ConsolePlayer : Player
         frame.Display();
     }
 
+    private void DisplayHand() {
+        var HandCard1UI = new CardUI(Hand[0]);
+        frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
+        var HandCard2UI = new CardUI(Hand[1]);
+        frame.AddComponent(HandCard2UI, frame.Center.X - HandCard2UI.SizeX/2 + 6, frame.Center.Y + 10);
+    }
+    private void DisplayFlop(GameState state) {
+        int xOff = frame.Center.X;
+        int yOff = frame.Center.Y - 6;
+        int xMargin = 7;
+        for(int i = 0 ; i < 5 ; i++) {
+            CardUI ui;
+            if(i < state.Flop.Count) {
+                ui = new CardUI(state.Flop[i]);
+            } else {
+                ui = CardUI.UnrevealedCard();
+            }
+            int xPos = xOff - ui.PosX/2 + (i-2) * xMargin;
+            frame.AddComponent(ui, xPos, yOff);
+        }
+    }
     
 
     protected override void DisplayErrorMessage(string message)
