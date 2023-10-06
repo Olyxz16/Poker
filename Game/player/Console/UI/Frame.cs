@@ -11,6 +11,7 @@ public class Frame
     public (int X, int Y) Center => (SizeX/2, SizeY/2);
 
     private readonly char[,] characters;
+    private Canvas _canvas;
 
     public delegate void ClearDelegate();
     public delegate void WriteDelegate(string message);
