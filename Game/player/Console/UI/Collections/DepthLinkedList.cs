@@ -43,4 +43,14 @@ public class DepthLinkedList : LinkedList<Component>
         return closest;
     }
 
+
+    public new IEnumerator<Component> GetEnumerator()  // IEnumerable<int> works too.
+    {
+        var pivot = this.Last;
+        while(pivot != null) {
+            yield return pivot.Value;
+            pivot = pivot.Previous;
+        }    
+    }
+
 }
