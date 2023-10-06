@@ -4,6 +4,7 @@ public abstract class Component {
 
     public int PosX { get; private set; }
     public int PosY { get; private set; }
+    public int Depth { get; private set; }
 
     public int SizeX => _content.GetLength(0);
     public int SizeY => _content.GetLength(1);
@@ -11,7 +12,8 @@ public abstract class Component {
     protected char[,] _content;
     public char[,] Content => (char[,])_content.Clone();
 
-    public Component(int sizeX, int sizeY) {
+    public Component(int sizeX, int sizeY, int depth = 0) {
+        Depth = depth;
         _content = new char[sizeX,sizeY];
         for(int x = 0 ; x < sizeX ; x++) {
             for(int y = 0 ; y < sizeY ; y++) {
