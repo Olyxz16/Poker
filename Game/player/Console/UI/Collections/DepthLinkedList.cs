@@ -19,7 +19,7 @@ public class DepthLinkedList : LinkedList<Component>
         }
         _depthDict.TryGetValue(depth, out var elem);
         if(elem != null) {
-            var node = base.AddBefore(elem, component);
+            var node = base.AddAfter(elem, component);
             _depthDict[depth] = node;
         } else {
             int closestDepth = GetClosestDepth(depth);
