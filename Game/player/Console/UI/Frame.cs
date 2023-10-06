@@ -12,6 +12,10 @@ public class Frame
 
     private readonly char[,] characters;
 
+    public delegate void ClearDelegate();
+    public delegate void WriteDelegate(string message);
+    private ClearDelegate? clear;
+    private WriteDelegate? write;
 
     public Frame(int sizeX, int sizeY) {
         SizeX = sizeX;
@@ -22,6 +26,11 @@ public class Frame
                 characters[x,y] = ' ';
             }
         }
+    }
+
+    public void SetDisplayDelegates(ClearDelegate clearDele, WriteDelegate writeDele) {
+        clear = clearDele;
+        write = writeDele;
     }
 
     public void SetCharAt(char c, int x, int y) {
@@ -83,7 +92,10 @@ public class Frame
     }
 
     public void Display() {
-        Console.Clear();
+        if(clear == null || write == null) {
+            throw new NullReferenceException("Display functions cannot be null.");
+        }
+        clear();
         var stringBuilder = new StringBuilder();
         for(int y = 0 ; y < SizeY-1 ; y++) {
             for(int x = 0 ; x < SizeX ; x++) {
@@ -94,7 +106,7 @@ public class Frame
         for(int x = 0 ; x < SizeX ; x++) {
             stringBuilder.Append(characters[x,SizeY-1]);
         }
-        Console.Write(stringBuilder.ToString());
+        write(stringBuilder.ToString());
     }
     public void Reset() {
         for(int x = 0 ; x < SizeX ; x++) {

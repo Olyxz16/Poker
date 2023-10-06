@@ -12,6 +12,7 @@ public class ConsolePlayer : Player
 
     public ConsolePlayer(int balance) : base(balance) {
         frame = Frame.GetCurrentFrame();
+        frame.SetDisplayDelegates(Console.Clear, Console.Write);
         Name = $"Player-{PLAYER_COUNT++}";
         errorField = new TextField("");
     }
