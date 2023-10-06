@@ -29,7 +29,7 @@ public class DepthLinkedList : LinkedList<Component>
             }
             elem = _depthDict[closestDepth];
             var node = base.AddAfter(elem, component);
-            _depthDict[closestDepth] = node;
+            _depthDict[depth] = node;
         } 
     }
 
