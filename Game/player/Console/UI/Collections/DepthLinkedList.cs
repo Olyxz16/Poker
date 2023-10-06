@@ -16,6 +16,7 @@ public class DepthLinkedList : LinkedList<Component>
         if(_depthDict.Count == 0) {
             var node = base.AddFirst(component);
             _depthDict[depth] = node;
+            return;
         }
         _depthDict.TryGetValue(depth, out var elem);
         if(elem != null) {
