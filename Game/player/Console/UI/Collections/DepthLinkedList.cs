@@ -13,6 +13,10 @@ public class DepthLinkedList : LinkedList<Component>
 
     public void Add(Component component) {
         int depth = component.Depth;
+        if(_depthDict.Count == 0) {
+            var node = base.AddFirst(component);
+            _depthDict[depth] = node;
+        }
         _depthDict.TryGetValue(depth, out var elem);
         if(elem != null) {
             var node = base.AddBefore(elem, component);
