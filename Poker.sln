@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker", "Game\Poker.csproj"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Tests\Test.csproj", "{134AC3AF-1811-40CF-802F-7A41070C3EDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basic", "Examples\Basic\Basic.csproj", "{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Local", "Examples\Local\Local.csproj", "{F6FA4C46-B6BE-4914-A2D7-3B4803AF9B45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

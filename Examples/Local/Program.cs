@@ -1,8 +1,7 @@
 ﻿using Poker;
-using Poker.Cards;
 using Poker.Players;
 
-namespace Basic;
+namespace Local;
 
 public class Program
 {
