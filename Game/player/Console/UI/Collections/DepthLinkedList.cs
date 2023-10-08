@@ -32,6 +32,10 @@ public class DepthLinkedList : LinkedList<Component>
             _depthDict[depth] = node;
         } 
     }
+    public new void Clear() {
+        base.Clear();
+        _depthDict.Clear();
+    }
 
     private int GetClosestDepth(int target) {
         int closest = -1;

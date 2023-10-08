@@ -66,6 +66,10 @@ public class Frame
         }
     }
 
+    public void ClearComponents() {
+        _components.Clear();
+    }
+
     public void Display() {
         if(clear == null || write == null) {
             throw new NullReferenceException("Display functions cannot be null.");

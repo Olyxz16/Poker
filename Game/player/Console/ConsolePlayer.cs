@@ -53,6 +53,7 @@ public class ConsolePlayer : Player
 
 
     protected override void DisplayGameState(GameState state) {
+        frame.ClearComponents();
         frame.SetBorder('*');
         
         CreateHandUI();
