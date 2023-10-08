@@ -55,9 +55,9 @@ public class ConsolePlayer : Player
     protected override void DisplayGameState(GameState state) {
         frame.SetBorder('*');
         
-        DisplayHand();
-        DisplayFlop(state);
-        DisplayBets(state);
+        CreateHandUI();
+        CreateFlopUI(state);
+        CreateBetsUI(state);
 
         var nameUI = new TextField(Name);
         frame.AddComponent(nameUI, 4, 2);
@@ -73,13 +73,13 @@ public class ConsolePlayer : Player
         frame.Display();
     }
 
-    private void DisplayHand() {
+    private void CreateHandUI() {
         var HandCard1UI = new CardUI(Hand[0]);
         frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
         var HandCard2UI = new CardUI(Hand[1]);
         frame.AddComponent(HandCard2UI, frame.Center.X - HandCard2UI.SizeX/2 + 6, frame.Center.Y + 10);
     }
-    private void DisplayFlop(GameState state) {
+    private void CreateFlopUI(GameState state) {
         int xOff = frame.Center.X;
         int yOff = frame.Center.Y - 6;
         int xMargin = 7;
@@ -94,7 +94,7 @@ public class ConsolePlayer : Player
             frame.AddComponent(ui, xPos, yOff);
         }
     }
-    private void DisplayBets(GameState state) {
+    private void CreateBetsUI(GameState state) {
         var bets = state.Bets;
         int count = bets.Count;
         int xOff = frame.Center.X;
