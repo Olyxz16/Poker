@@ -4,15 +4,14 @@ using Poker.Players.UI;
 
 namespace Poker.Players;
 
-public class ConsolePlayer : Player
+public abstract class ConsolePlayer : Player, IDisplayable
 {
 
-    private readonly Frame frame;
-    private readonly TextField errorField;
+    protected Frame frame;
+    protected readonly TextField errorField;
 
     public ConsolePlayer(int balance) : base(balance) {
-        frame = Frame.GetCurrentFrame();
-        frame.SetDisplayDelegates(Console.Clear, Console.Write);
+        frame = Frame.Empty();
         Name = $"Player-{PLAYER_COUNT++}";
         errorField = new TextField("");
     }
@@ -119,6 +118,10 @@ public class ConsolePlayer : Player
         frame.AddComponent(errorField, frame.Center.X - 7, frame.Center.Y + 6, true);
     }
 
-    
-    
+    public abstract void Write(string val);
+    public abstract void Clear();
+    public abstract void Prompt();
+    public abstract void SetCursorPosition(int x, int y);
+    public abstract (int x, int y) GetSize();
+
 }

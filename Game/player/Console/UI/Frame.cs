@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using GUISharp.Components;
 using GUISharp.Collections;
+using Poker.Players;
 
 namespace GUISharp;
 
@@ -11,32 +12,28 @@ public class Frame
     public int SizeY { get; private set; }
     public (int X, int Y) Center => (SizeX/2, SizeY/2);
 
-    private Canvas _canvas;
-
+    private readonly IDisplayable? _target;
     private readonly DepthLinkedList _components;
 
-    public delegate void ClearDelegate();
-    public delegate void WriteDelegate(string message);
-    private ClearDelegate? clear;
-    private WriteDelegate? write;
+    private Canvas _canvas;
 
-    public Frame(int sizeX, int sizeY) {
+
+    public Frame(IDisplayable? target, int sizeX, int sizeY) {
         SizeX = sizeX;
         SizeY = sizeY;
-        _canvas = new Canvas(SizeX, SizeY, 99);
+        _target = target;
         _components = new DepthLinkedList();
+        _canvas = new Canvas(SizeX, SizeY, 99);
     }
-
-    public void SetDisplayDelegates(ClearDelegate clearDele, WriteDelegate writeDele) {
-        clear = clearDele;
-        write = writeDele;
+    public static Frame Empty() {
+        return new Frame(null, 0, 0);
     }
 
     public void SetCursorPosition(int x, int y) {
-        if(x < 0 || x >= SizeX || y < 0 || y >= SizeY) {
-            throw new IndexOutOfRangeException("");
+        if(_target == null) {
+            throw new NullReferenceException("Target cannot be null.");
         }
-        Console.SetCursorPosition(x,y);
+        _target.SetCursorPosition(x,y);
     }
 
     public void SetCharAt(char c, int x, int y) {
@@ -71,12 +68,12 @@ public class Frame
     }
 
     public void Display() {
-        if(clear == null || write == null) {
-            throw new NullReferenceException("Display functions cannot be null.");
+        if(_target == null) {
+            throw new NullReferenceException("Target cannot be null.");
         }
-        clear();
+        _target.Clear();
         var str = BuildComponents();
-        write(str);
+        _target.Write(str);
     }
     private string BuildComponents() {
         var characters = new char[SizeX,SizeY];
@@ -120,13 +117,6 @@ public class Frame
             stringBuilder.Append(characters[x,SizeY-1]);
         }
         return stringBuilder.ToString();
-    }
-    
-
-    public static Frame GetCurrentFrame() {
-        int sizeX = Console.WindowWidth;
-        int sizeY = Console.WindowHeight;
-        return new Frame(sizeX, sizeY);
     }
 
 }
