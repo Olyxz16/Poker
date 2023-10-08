@@ -31,7 +31,7 @@ public class ConsolePlayer : Player
         return move;
     }
 
-    private bool IsValid(string input, out Move move) {
+    private static bool IsValid(string input, out Move move) {
         var pars = (input ?? "").ToLower().Split(" ");
         if(pars.Length == 0) {
             move = Move.Fold();
