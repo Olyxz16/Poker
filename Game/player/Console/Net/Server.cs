@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -16,23 +17,27 @@ public sealed class Server
     } }
     private static Server? _instance;
 
+    public bool IsRunning => _listeningThread.ThreadState == ThreadState.Running;
 
     private TcpListener _listener;
+    private Thread _listeningThread;
     private bool _listening;
 
-    private List<TcpClient> _clients;
+    public Dictionary<RemoteConsolePlayer, int> _players;
+    private Dictionary<int, TcpClient> _clients;
 
 
     private Server() { 
 
         _listening = true;
         _listener = new TcpListener(IPAddress.Any, PORT);
-        _clients = new List<TcpClient>();
+        _players = new Dictionary<RemoteConsolePlayer, int>();
+        _clients = new Dictionary<int, TcpClient>();
 
-        var listeningThread = new Thread(Listen);
-        listeningThread.Start();
+        _listeningThread = new Thread(Listen);
+        _listeningThread.Start();
 
-        while(_listening);
+        Console.WriteLine("Server running");
         
     }
 
@@ -41,42 +46,60 @@ public sealed class Server
         _listener.Start();
         while(_listening) {
             TcpClient client = _listener.AcceptTcpClient();
-            NetworkStream stream = client.GetStream();
-            while(client.Available < 3);
-            byte[] bytes = new byte[client.Available];
-            stream.Read(bytes, 0, bytes.Length);
-            var data = Encoding.UTF8.GetString(bytes);
-            if (new System.Text.RegularExpressions.Regex("^GET").IsMatch(data))
-            {
-                var response = GetConfirmation(data);
-                stream.Write(response, 0, response.Length);
-            }
-            _clients.Add(client);
+            HandleHandshake(client);
         }
     }
 
-    
-    private static byte[] GetConfirmation(string header) {
-        
-        const string eol = "\r\n"; // HTTP/1.1 defines the sequence CR LF as the end-of-line marker
 
-        byte[] response = Encoding.UTF8.GetBytes("HTTP/1.1 101 Switching Protocols" + eol
-            + "Connection: Upgrade" + eol
-            + "Upgrade: websocket" + eol
-            + "Sec-WebSocket-Accept: " + Convert.ToBase64String(
-                System.Security.Cryptography.SHA1.Create().ComputeHash(
-                    Encoding.UTF8.GetBytes(
-                        new System.Text.RegularExpressions.Regex("Sec-WebSocket-Key: (.*)").Match(header).Groups[1].Value.Trim() + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-                    )
-                )
-            ) + eol
-            + eol);
+    public void SendAndWaitForAnswer(RemoteConsolePlayer player, Protocol request) {
+        var targetClient = _clients[_players[player]];
+        Send(targetClient, request);
+        var answer = Receive(targetClient);
+    }
 
-        return response;
-    
+     private void Send(TcpClient client, Protocol value) {
+        var stream = client.GetStream();
+        var data = Encoding.UTF8.GetBytes(value.Serialize());
+        stream.Write(data, 0, data.Length);
+    }
+    private Protocol Receive(TcpClient client) {
+        var stream = client.GetStream();
+        while(!stream.DataAvailable);
+        var data = new byte[client.Available];
+        stream.Read(data, 0, data.Length);
+        var result = Protocol.Parse(Encoding.UTF8.GetString(data));
+        return result;
     }
 
 
+    private void HandleHandshake(TcpClient client) {
+        var stream = client.GetStream();
+        while(!stream.DataAvailable);
+        var bytes = new byte[client.Available];
+        stream.Read(bytes, 0, bytes.Length);
+        var data = Protocol.Parse(Encoding.UTF8.GetString(bytes));
+        
+        int sizeX = data.GetInt("X");
+        int sizeY = data.GetInt("Y");
+        var player = new RemoteConsolePlayer(100, sizeX, sizeY);
+
+        int id = GenerateID();
+        var answer = new Protocol()
+            .SetValue("ID", id);
+        stream.Write(Encoding.UTF8.GetBytes(answer.Serialize()));
+
+        _players.Add(player,id);
+        _clients.Add(id,client);
+    }
+
+
+    private int GenerateID() {
+        int result;
+        do {
+            result = new Random().Next();
+        } while(_players.ContainsValue(result));
+        return result;
+    }
 
 
 }
