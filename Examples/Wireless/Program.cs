@@ -19,7 +19,7 @@ public class Program
 
         void AddAndClear(Player player) {
             players.Add(player);
-            (player as RemoteConsolePlayer).Clear();
+            
         }
 
     }
