@@ -18,7 +18,7 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
         frame.AddComponent(component, frame.Center.X, frame.Center.Y);
         _server = Server.Instance;
         _netID = id;
-        
+        frame.Display();
     }
 
     public override void Clear()
