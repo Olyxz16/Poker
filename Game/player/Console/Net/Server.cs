@@ -21,9 +21,10 @@ public sealed class Server
     private TcpListener _listener;
     private Thread _listeningThread;
     private bool _listening;
+    public delegate void OnPlayerAdd(Player player);
+    public event OnPlayerAdd? OnPlayerAddEvent;
 
     private Dictionary<int, TcpClient> _clients;
-
     public IReadOnlyDictionary<int, TcpClient> Clients => _clients;
 
     private Server() { 
@@ -75,14 +76,10 @@ public sealed class Server
         
         int sizeX = data.GetInt("X");
         int sizeY = data.GetInt("Y");
-        var player = new RemoteConsolePlayer(100, sizeX, sizeY);
-
         int id = GenerateID();
-        var answer = new Protocol()
-            .SetValue("ID", id);
-        stream.Write(Encoding.UTF8.GetBytes(answer.Serialize()));
-
         _clients.Add(id,client);
+        var player = new RemoteConsolePlayer(100, id, sizeX, sizeY);
+        OnPlayerAddEvent?.Invoke(player);
     }
 
 
