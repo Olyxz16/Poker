@@ -22,22 +22,17 @@ public sealed class Server
     private Thread _listeningThread;
     private bool _listening;
 
-    public Dictionary<RemoteConsolePlayer, int> _players;
     private Dictionary<int, TcpClient> _clients;
 
+    public IReadOnlyDictionary<int, TcpClient> Clients => _clients;
 
     private Server() { 
-
         _listening = true;
         _listener = new TcpListener(IPAddress.Any, PORT);
-        _players = new Dictionary<RemoteConsolePlayer, int>();
         _clients = new Dictionary<int, TcpClient>();
 
         _listeningThread = new Thread(Listen);
         _listeningThread.Start();
-
-        Console.WriteLine("Server running");
-        
     }
 
     private void Listen() 
@@ -51,7 +46,7 @@ public sealed class Server
 
 
     public void SendAndWaitForAnswer(RemoteConsolePlayer player, Protocol request) {
-        var targetClient = _clients[_players[player]];
+        var targetClient = _clients[player.NetID];
         Send(targetClient, request);
         var answer = Receive(targetClient);
     }
@@ -87,7 +82,6 @@ public sealed class Server
             .SetValue("ID", id);
         stream.Write(Encoding.UTF8.GetBytes(answer.Serialize()));
 
-        _players.Add(player,id);
         _clients.Add(id,client);
     }
 
@@ -96,7 +90,7 @@ public sealed class Server
         int result;
         do {
             result = new Random().Next();
-        } while(_players.ContainsValue(result));
+        } while(_clients.ContainsKey(result));
         return result;
     }
 
