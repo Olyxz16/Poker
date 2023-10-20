@@ -54,9 +54,18 @@ public class Client
     }
 
 
-    // TO BE CONTINUED
-    private Protocol ParseAnswer(Protocol value) {
-        return new Protocol();
+    private Protocol ParseAnswer(Protocol request) {
+        if(request.ContainsKey("DISPLAY_ACTION")) {
+            switch(request.GetString("DISPLAY_ACTION")) {
+                case "DISPLAY": {
+                    var content = request.GetString("DISPLAY_CONTENT");
+                    Display(content);
+                }; break;
+                case "CLEAR": Clear(); break;
+            }
+        }
+        return new Protocol()
+            .SetValue("STATUS", "OK");
     }
 
 
