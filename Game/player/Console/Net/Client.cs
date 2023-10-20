@@ -73,6 +73,9 @@ public class Client
     private void Display(string value) {
         Console.WriteLine(value);
     }
+    private void Clear() {
+        Console.Clear();
+    }
 
 
 }
