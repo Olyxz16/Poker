@@ -24,8 +24,15 @@ public class Protocol
         return this;
     }
 
+    public bool ContainsKey(string key) {
+        return _values.ContainsKey(key);
+    }
+
     public int GetInt(string key) {
         return ((JsonElement)_values[key]).GetInt32();
+    }
+    public string GetString(string key) {
+        return ((JsonElement)_values[key]).GetString();
     }
 
 
