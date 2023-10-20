@@ -37,6 +37,9 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
 
     public override void Write(string val)
     {
-        throw new NotImplementedException();
+        var req = new Protocol()
+            .SetValue("DISPLAY_ACTION", "DISPLAY")
+            .SetValue("DISPLAY_CONTENT", val);
+        _server.SendAndWaitForAnswer(this, req);
     }
 }
