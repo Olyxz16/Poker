@@ -10,7 +10,6 @@ public class Client
     private const string HOST = "127.0.0.1";
     private const int PORT = 8080;
 
-    private int _id;
     private TcpClient _client;
     private Thread _listeningThread;
 
@@ -29,8 +28,6 @@ public class Client
             .SetValue("X", Console.WindowWidth)
             .SetValue("Y", Console.WindowHeight);
         Send(sendValue);
-        var answer = Receive();
-        _id = answer.GetInt("ID");
     }
 
     private void Send(Protocol value) {
