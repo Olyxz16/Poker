@@ -1,17 +1,25 @@
 using GUISharp;
+using GUISharp.Components;
+using Poker.Players.Net;
 
 namespace Poker.Players;
 
 public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
 {
 
-    // Envoie les données au serveur, qu'il doit envoyer au client.
+    private Server _server;
+    public int NetID => _netID;
+    private readonly int _netID;
 
-    public RemoteConsolePlayer(int balance, int x, int y) : base(balance)
+    public RemoteConsolePlayer(int balance, int id, int x, int y) : base(balance)
     {
         frame = new Frame(this, x, y);
+        var component = new TextField("Test");
+        frame.AddComponent(component, frame.Center.X, frame.Center.Y);
+        _server = Server.Instance;
+        _netID = id;
+        
     }
-
 
     public override void Clear()
     { 
