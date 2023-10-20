@@ -16,9 +16,9 @@ public class Client
     public Client(string host, int port) {
         _client = new TcpClient();
         _client.Connect(IPAddress.Parse(host), port);
-        HandleHandshake();
         _listeningThread = new Thread(WaitAndAnswer);
         _listeningThread.Start();
+        HandleHandshake();
     }
     public Client() : this(HOST, PORT) {}
 
