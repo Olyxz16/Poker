@@ -14,8 +14,10 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
 
 
     public override void Clear()
-    {
-        
+    { 
+        var req = new Protocol()
+            .SetValue("DISPLAY_ACTION", "CLEAR");
+        _server.SendAndWaitForAnswer(this, req);
     }
 
     public override (int x, int y) GetSize()
