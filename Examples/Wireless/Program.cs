@@ -8,20 +8,35 @@ public class Program
 
     public static void Main(string[] args) 
     {
-        
-        var players = new List<Player>();
 
-        var server = Server.Instance;
-        server.OnPlayerAddEvent += AddAndClear;
-        var client = new Client();
-
-        while(server.IsRunning);
-
-        void AddAndClear(Player player) {
-            players.Add(player);
-            
+        if(args.Contains("--host")) {
+            HostGame();
         }
 
+        if(args.Contains("--client")) {
+            string ip = "";
+            int port = 0;
+            try {
+                int index = Array.IndexOf(args, "--client");
+                var address = args[index+1].Split(':');
+                ip = address[0];
+                port = int.Parse(address[1]);
+            } catch(Exception e) {
+
+            } finally {
+                _ = new Client(ip, port);
+            }
+            
+        }
+        
+    }
+
+
+    private static void HostGame() {
+        var lobby = new Lobby();
+        var players = lobby.WaitForPlayers();
+        var game = new Game(players);
+        game.Play();
     }
 
 }
