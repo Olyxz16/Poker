@@ -7,6 +7,7 @@ public class LocalConsolePlayer : ConsolePlayer, IDisplayable
     public LocalConsolePlayer(int balance) : base(balance)
     {
         frame = new Frame(this, Console.WindowWidth, Console.WindowHeight);
+        DisplayWaitingScreen();
     }
 
     public override void Write(string val)

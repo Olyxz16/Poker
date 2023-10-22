@@ -1,5 +1,4 @@
 using GUISharp;
-using GUISharp.Components;
 using Poker.Players.Net;
 
 namespace Poker.Players;
@@ -14,11 +13,9 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
     public RemoteConsolePlayer(int balance, int id, int x, int y) : base(balance)
     {
         frame = new Frame(this, x, y);
-        var component = new TextField("Test");
-        frame.AddComponent(component, frame.Center.X, frame.Center.Y);
         _server = Server.Instance;
         _netID = id;
-        frame.Display();
+        DisplayWaitingScreen();
     }
 
     public override void Clear()

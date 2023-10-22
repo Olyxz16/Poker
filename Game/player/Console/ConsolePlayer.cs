@@ -73,6 +73,18 @@ public abstract class ConsolePlayer : Player, IDisplayable
         frame.Display();
     }
 
+    protected virtual void DisplayWaitingScreen() {
+        frame.ClearComponents();
+        frame.SetBorder('*');
+
+        var text = new TextField("Waiting for players to join...");
+        int xPos = frame.Center.X - text.SizeX/2;
+        int yPos = frame.Center.Y;
+        frame.AddComponent(text, xPos, yPos);
+
+        frame.Display();
+    }
+
     private void CreateHandUI() {
         var HandCard1UI = new CardUI(Hand[0]);
         frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
