@@ -34,6 +34,8 @@ public sealed class Server
 
         _listeningThread = new Thread(Listen);
         _listeningThread.Start();
+
+        Console.WriteLine("Listening ...");
     }
 
     private void Listen() 
@@ -41,6 +43,7 @@ public sealed class Server
         _listener.Start();
         while(_listening) {
             TcpClient client = _listener.AcceptTcpClient();
+            Console.WriteLine("Player connecting ...");
             HandleHandshake(client);
         }
     }
