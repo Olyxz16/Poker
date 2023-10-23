@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Poker.Players.Net;
 
@@ -74,6 +75,8 @@ public class Client
 
 
     private void Display(string value) {
+        Regex pattern = new("\n");
+        value = pattern.Replace(value, "\r");
         Console.WriteLine(value);
     }
     private void Clear() {
