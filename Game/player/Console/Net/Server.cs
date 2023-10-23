@@ -55,6 +55,7 @@ public sealed class Server
      private void Send(TcpClient client, Protocol value) {
         var stream = client.GetStream();
         var data = Encoding.UTF8.GetBytes(value.Serialize());
+        stream.Write(Encoding.UTF8.GetBytes(data.Length.ToString()));
         stream.Write(data, 0, data.Length);
     }
     private Protocol Receive(TcpClient client) {
