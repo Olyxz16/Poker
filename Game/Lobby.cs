@@ -24,6 +24,7 @@ public class Lobby
             Console.WriteLine("Press Enter to stop.");
             key = Console.ReadKey();
         }
+        Console.WriteLine($"Lobby closed with ${_players.Count} players;");
         return _players;
     }
 

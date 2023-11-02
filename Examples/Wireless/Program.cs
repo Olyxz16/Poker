@@ -21,11 +21,11 @@ public class Program
                 ip = address[0];
                 port = int.Parse(address[1]);
             } catch(Exception e) {
-
+                // Have to handle error.
+                Console.WriteLine(e);
             } finally {
                 _ = new Client(ip, port);
             }
-            
         }
         
     }
