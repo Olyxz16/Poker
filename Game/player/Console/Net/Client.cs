@@ -42,9 +42,18 @@ public class Client
         var data = new byte[32];
         stream.Read(data, 0, data.Length);
         int size = int.Parse(Encoding.UTF8.GetString(data));
+
+        while(_client.Available != size);
         data = new byte[size];
         stream.Read(data, 0, data.Length);
-        var result = Protocol.Parse(Encoding.UTF8.GetString(data));
+
+        Protocol result = null;
+        try {
+            result = Protocol.Parse(Encoding.UTF8.GetString(data));
+        } catch(Exception e) {
+            Console.WriteLine(Encoding.UTF8.GetString(data));
+            Console.Read();
+        }
         return result;
     }
 
@@ -77,7 +86,7 @@ public class Client
     private void Display(string value) {
         Regex pattern = new("\n");
         value = pattern.Replace(value, "\r");
-        Console.WriteLine(value);
+        //Console.WriteLine(value);
     }
     private void Clear() {
         Console.Clear();
