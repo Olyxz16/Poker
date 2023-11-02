@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Poker;
+﻿using Poker;
 using Poker.Players;
 using Poker.Players.Net;
 
