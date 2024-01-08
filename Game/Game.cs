@@ -108,7 +108,7 @@ public class Game
 
     public void RemoveLosers() {
         for(int i = _players.Count-1 ; i >= 0; i--) {
-            if(_players[i].Balance <= 0) {
+            if(_players[i].Balance <= BIG_BLIND) {
                 _players.RemoveAt(i);
             }
         }
