@@ -16,6 +16,7 @@ public class Game
 
     protected Dictionary<string, int> _bets;
     public IReadOnlyDictionary<string, int> Bets => _bets;
+    protected int MaxBetValue => _bets.Values.Max();
 
     protected List<Card> _flop;
     public IReadOnlyList<Card> River => _flop;
@@ -84,8 +85,12 @@ public class Game
             if(move.MoveType == MoveType.FOLD) {
                 remainingPlayers.Remove(player);
                 i--;
-            } else if(move.MoveType == MoveType.BET) {
+                continue;
+            }
+            bool allowed = move.BetValue >= MaxBetValue || move.BetValue == player.Balance;
+            if(move.MoveType == MoveType.BET && allowed) {
                 _bets[player.Name] += move.BetValue;
+                player.Balance -= move.BetValue;
             }
         }
     }
