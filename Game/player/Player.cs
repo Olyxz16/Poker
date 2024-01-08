@@ -34,9 +34,6 @@ public abstract class Player
             DisplayErrorMessage(errorMessage);
             chosenMove = ChoseMove(state);
         }
-        if(chosenMove.MoveType == MoveType.BET) {
-            Balance -= chosenMove.BetValue;
-        }
         return chosenMove;
     }
 
