@@ -7,12 +7,15 @@ namespace Tests.Helpers;
 public class PlayerHelper : Player
 {
 
+    private static int COUNT = 0;
     private Queue<Move> moves;
 
-    public PlayerHelper(int balance) : base(balance)
+    public PlayerHelper(int balance, string name) : base(balance, name)
     {
         moves = new Queue<Move>();
-    }
+        COUNT++;
+    } 
+    public PlayerHelper(int balance) : this(balance, "Player"+(COUNT+1)) {}
 
     public void AddMove(Move move) {
         moves.Enqueue(move);

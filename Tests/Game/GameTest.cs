@@ -10,9 +10,9 @@ public class GameTest {
     public void Game1() {
 
         // Q, 8 // 7, 2 // 10, A, 2, V, K
-        var player1 = new PlayerHelper(100);
+        var player1 = new PlayerHelper(100, "P1");
         player1.DrawHand(new(12, CardColor.CLUB), new(8, CardColor.DIAMOND));
-        var player2 = new PlayerHelper(100);
+        var player2 = new PlayerHelper(100, "P2");
         player2.DrawHand(new(7, CardColor.DIAMOND), new(2, CardColor.SPADE));
 
         var flop = new List<Card> {
@@ -39,7 +39,7 @@ public class GameTest {
 
 
         var winner = game.Play();
-        Assert.Same(winner, player1);
+        Assert.Equal("P1", winner.Name);
 
     }
     
