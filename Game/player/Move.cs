@@ -59,7 +59,7 @@ public struct Move
             return false;
         }
         
-        if(chosenMove.BetValue > playerBet) {
+        if(chosenMove.BetValue > state.Player.Balance) {
             errorMessage = "Insufficient balance.";
             return false;
         }
