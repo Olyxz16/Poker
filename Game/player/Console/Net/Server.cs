@@ -7,8 +7,8 @@ namespace Poker.Players.Net;
 public sealed class Server
 {
 
-    private const string HOST = "127.0.0.1";
-    private const int PORT = 8080;
+    internal const string HOST = "127.0.0.1";
+    internal const int PORT = 8080;
     
     public static Server Instance { get {
         _instance ??= new Server();

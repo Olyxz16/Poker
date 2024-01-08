@@ -8,8 +8,8 @@ namespace Poker.Players.Net;
 public class Client
 {
     
-    private const string HOST = "127.0.0.1";
-    private const int PORT = 8080;
+    private const string HOST = Server.HOST;
+    private const int PORT = Server.PORT;
 
     private TcpClient _client;
     private Thread _listeningThread;
@@ -47,12 +47,11 @@ public class Client
         data = new byte[size];
         stream.Read(data, 0, data.Length);
 
-        Protocol result = null;
+        Protocol result;
         try {
             result = Protocol.Parse(Encoding.UTF8.GetString(data));
-        } catch(Exception e) {
-            Console.WriteLine(Encoding.UTF8.GetString(data));
-            Console.Read();
+        } catch (Exception) {
+            result = new Protocol();
         }
         return result;
     }
@@ -86,7 +85,6 @@ public class Client
     private void Display(string value) {
         Regex pattern = new("\n");
         value = pattern.Replace(value, "\r");
-        //Console.WriteLine(value);
     }
     private void Clear() {
         Console.Clear();
