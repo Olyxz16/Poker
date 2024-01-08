@@ -49,12 +49,16 @@ public struct Move
             return true;
         }
 
-        var currentBet = state.Bets.Count > 0 ? state.Bets.Values.Max() : 0;
-        if(state.Bets.Count > 0 && chosenMove.BetValue < currentBet) {
-            errorMessage = $"You have to bet over {currentBet}";
+        var maxBet = state.Bets.Count > 0 ? state.Bets.Values.Max() : 0;
+        var playerBet = chosenMove.BetValue;
+        if(playerBet  == state.Player.Balance) {
+            return true;
+        }
+        if(state.Bets.Count > 0 && chosenMove.BetValue < maxBet) {
+            errorMessage = $"You have to bet over {maxBet}";
             return false;
         }
-        var playerBet = chosenMove.BetValue;
+        
         if(chosenMove.BetValue > playerBet) {
             errorMessage = "Insufficient balance.";
             return false;
