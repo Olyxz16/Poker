@@ -1,5 +1,5 @@
 using Poker.Cards;
-using Tests.TestTypes;
+using Tests.Helpers;
 
 namespace Tests;
 
@@ -19,9 +19,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(5, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.HIGH_CARD, c2.GetCombinationType());
@@ -37,9 +37,9 @@ public class CombinationTest
             new(5, CardColor.HEART),
             new(8, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(1, CardColor.CLUB), new(10, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(4, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.HIGH_CARD, c1.GetCombinationType());
@@ -55,9 +55,9 @@ public class CombinationTest
             new(5, CardColor.HEART),
             new(8, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(10, CardColor.CLUB), new(12, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(12, CardColor.HEART), new(4, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.HIGH_CARD, c1.GetCombinationType());
@@ -73,9 +73,9 @@ public class CombinationTest
             new(5, CardColor.HEART),
             new(8, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(1, CardColor.CLUB), new(10, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(1, CardColor.HEART), new(9, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.HIGH_CARD, c1.GetCombinationType());
@@ -97,9 +97,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(10, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.PAIR, c1.GetCombinationType());
@@ -117,9 +117,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(9, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.PAIR, c2.GetCombinationType());
@@ -136,9 +136,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(2, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.PAIR, c2.GetCombinationType());
@@ -155,9 +155,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(10, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.PAIR, c1.GetCombinationType());
@@ -178,9 +178,9 @@ public class CombinationTest
             new(6, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(10, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p1);
@@ -194,9 +194,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(9, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p2);
@@ -211,9 +211,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(2, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p2);
@@ -228,9 +228,9 @@ public class CombinationTest
             new(13, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(10, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(2, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p2);
@@ -246,9 +246,9 @@ public class CombinationTest
             new(6, CardColor.HEART),
             new(12, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(12, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(4, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p1);
@@ -263,9 +263,9 @@ public class CombinationTest
             new(6, CardColor.HEART),
             new(4, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(4, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Null(winner);
@@ -288,9 +288,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(5, CardColor.CLUB), new(10, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var winner = Combination.Compare(p1, p2, flop);
         Assert.Same(winner, p1);
@@ -305,9 +305,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(5, CardColor.CLUB), new(10, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(10, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.THREE_OF_A_KIND, c1.GetCombinationType());
@@ -331,9 +331,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(7, CardColor.CLUB), new(9, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.STRAIGHT, c1.GetCombinationType());
@@ -350,9 +350,9 @@ public class CombinationTest
             new(4, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(13, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.SPADE));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.STRAIGHT, c2.GetCombinationType());
@@ -370,9 +370,9 @@ public class CombinationTest
             new(10, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(12, CardColor.CLUB), new(11, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.STRAIGHT, c1.GetCombinationType());
@@ -396,9 +396,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(7, CardColor.CLUB), new(9, CardColor.CLUB));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.FLUSH, c1.GetCombinationType());
@@ -415,9 +415,9 @@ public class CombinationTest
             new(4, CardColor.HEART),
             new(13, CardColor.HEART)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(13, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(6, CardColor.HEART));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.FLUSH, c2.GetCombinationType());
@@ -441,9 +441,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(5, CardColor.CLUB), new(9, CardColor.CLUB));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.FULL_HOUSE, c1.GetCombinationType());
@@ -460,9 +460,9 @@ public class CombinationTest
             new(4, CardColor.HEART),
             new(13, CardColor.HEART)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(13, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(4, CardColor.HEART));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.FULL_HOUSE, c2.GetCombinationType());
@@ -485,9 +485,9 @@ public class CombinationTest
             new(11, CardColor.HEART),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(5, CardColor.CLUB), new(5, CardColor.CLUB));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.FOUR_OF_A_KIND, c1.GetCombinationType());
@@ -504,9 +504,9 @@ public class CombinationTest
             new(4, CardColor.HEART),
             new(13, CardColor.HEART)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(13, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(5, CardColor.HEART));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.FOUR_OF_A_KIND, c2.GetCombinationType());
@@ -529,9 +529,9 @@ public class CombinationTest
             new(6, CardColor.CLUB),
             new(13, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(4, CardColor.CLUB), new(3, CardColor.CLUB));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.STRAIGHT_FLUSH, c1.GetCombinationType());
@@ -548,9 +548,9 @@ public class CombinationTest
             new(4, CardColor.HEART),
             new(3, CardColor.HEART)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(13, CardColor.CLUB), new(3, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(1, CardColor.HEART), new(5, CardColor.HEART));
         var c2 = new Combination(p2, flop);
         Assert.Equal(CombinationType.STRAIGHT_FLUSH, c2.GetCombinationType());
@@ -567,7 +567,7 @@ public class CombinationTest
             new(1, CardColor.HEART),
             new(3, CardColor.CLUB)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(4, CardColor.SPADE), new(3, CardColor.CLUB));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.FLUSH, c1.GetCombinationType());
@@ -589,9 +589,9 @@ public class CombinationTest
             new(13, CardColor.CLUB),
             new(4, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(1, CardColor.CLUB), new(6, CardColor.SPADE));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.ROYAL_FLUSH, c1.GetCombinationType());
@@ -607,9 +607,9 @@ public class CombinationTest
             new(3, CardColor.CLUB),
             new(4, CardColor.SPADE)   
         };
-        var p1 = new TestPlayer(100);
+        var p1 = new PlayerHelper(100);
         p1.DrawHand(new(1, CardColor.CLUB), new(13, CardColor.CLUB));
-        var p2 = new TestPlayer(100);
+        var p2 = new PlayerHelper(100);
         p2.DrawHand(new(13, CardColor.HEART), new(3, CardColor.SPADE));
         var c1 = new Combination(p1, flop);
         Assert.Equal(CombinationType.ROYAL_FLUSH, c1.GetCombinationType());

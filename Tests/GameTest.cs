@@ -1,18 +1,18 @@
 using Poker.Cards;
 using Poker.Players;
-using Tests.TestTypes;
+using Tests.Helpers;
 
 namespace Tests;
 
 public class GameTest {
 
-    //[Fact]
+    [Fact]
     public void Game1() {
 
         // Q, 8 // 7, 2 // 10, A, 2, V, K
-        var player1 = new TestPlayer(100);
+        var player1 = new PlayerHelper(100);
         player1.DrawHand(new(12, CardColor.CLUB), new(8, CardColor.DIAMOND));
-        var player2 = new TestPlayer(100);
+        var player2 = new PlayerHelper(100);
         player2.DrawHand(new(7, CardColor.DIAMOND), new(2, CardColor.SPADE));
 
         var flop = new List<Card> {
@@ -22,7 +22,7 @@ public class GameTest {
             new(11, CardColor.CLUB),
             new(13, CardColor.CLUB)
         };
-        var game = new TestGame(new List<Player> { player1, player2 }, flop);
+        var game = new GameHelper(new List<Player> { player1, player2 }, flop);
         
         //       TURN 1
         player1.AddMove(Move.Bet(10));

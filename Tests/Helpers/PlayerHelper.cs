@@ -2,14 +2,14 @@ using Poker.Players;
 using Poker.Cards;
 using Poker;
 
-namespace Tests.TestTypes;
+namespace Tests.Helpers;
 
-public class TestPlayer : Player
+public class PlayerHelper : Player
 {
 
     private Queue<Move> moves;
 
-    public TestPlayer(int balance) : base(balance)
+    public PlayerHelper(int balance) : base(balance)
     {
         moves = new Queue<Move>();
     }
