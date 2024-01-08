@@ -26,8 +26,8 @@ public class Client
 
     private void HandleHandshake() {
         var sendValue = new Protocol()
-            .SetValue("X", Console.WindowWidth)
-            .SetValue("Y", Console.WindowHeight);
+            .SetInt("X", Console.WindowWidth)
+            .SetInt("Y", Console.WindowHeight);
         Send(sendValue);
     }
 
@@ -78,7 +78,7 @@ public class Client
             }
         }
         return new Protocol()
-            .SetValue("STATUS", "OK");
+            .SetString("STATUS", "OK");
     }
 
 

@@ -18,21 +18,24 @@ public class Protocol
         _values = from;
     }
 
+    public bool ContainsKey(string key) {
+        return _values.ContainsKey(key);
+    }
 
-    public Protocol SetValue(string key, object value) {
+    public Protocol SetInt(string key, int value) {
         _values[key] = value;
         return this;
     }
-
-    public bool ContainsKey(string key) {
-        return _values.ContainsKey(key);
+    public Protocol SetString(string key, string value) {
+        _values[key] = value;
+        return this;
     }
 
     public int GetInt(string key) {
         return ((JsonElement)_values[key]).GetInt32();
     }
     public string GetString(string key) {
-        return ((JsonElement)_values[key]).GetString();
+        return ((JsonElement)_values[key]).GetString() ?? "";
     }
 
 
