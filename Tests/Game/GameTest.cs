@@ -31,12 +31,11 @@ public class GameTest {
         player1.AddMove(Move.Bet(90));
         player2.AddMove(Move.Bet(80));
         //       TURN 3
-        player1.AddMove(Move.Bet(20));
-        player2.AddMove(Move.Bet(20));
+        player1.AddMove(Move.Bet(0));
+        player2.AddMove(Move.Bet(0));
         //       TURN 4
-        player1.AddMove(Move.Bet(20));
-        player2.AddMove(Move.Bet(20));
-
+        player1.AddMove(Move.Bet(0));
+        player2.AddMove(Move.Bet(0));
 
 
         var winner = game.Play();
