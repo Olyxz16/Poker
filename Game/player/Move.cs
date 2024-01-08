@@ -23,7 +23,7 @@ public struct Move
 
 
     public static bool IsValid(GameState state, Move chosenMove, out string errorMessage) {
-        
+        errorMessage = "";
         if(state.Round == 1) {
             if(state.Turn == 1) {
                 if(chosenMove.MoveType == MoveType.FOLD) {
@@ -34,7 +34,6 @@ public struct Move
                     errorMessage = $"You have to bet small blind : {Game.SMALL_BLIND}.";
                     return false;
                 }
-                errorMessage = "";
                 return true;
             }
             if(state.Turn == 2) {
@@ -42,13 +41,11 @@ public struct Move
                     errorMessage = $"You have to bet big blind : {Game.BIG_BLIND}.";
                     return false;
                 }
-                errorMessage = "";
                 return true;
             }
         }
         
         if(chosenMove.MoveType == MoveType.FOLD) {
-            errorMessage = "";
             return true;
         }
 
@@ -62,7 +59,6 @@ public struct Move
             errorMessage = "Insufficient balance.";
             return false;
         }
-        errorMessage = "";
         return true;
     }
 
