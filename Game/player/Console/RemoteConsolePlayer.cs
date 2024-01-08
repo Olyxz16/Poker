@@ -21,7 +21,7 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
     public override void Clear()
     { 
         var req = new Protocol()
-            .SetValue("DISPLAY_ACTION", "CLEAR");
+            .SetString("DISPLAY_ACTION", "CLEAR");
         _server.SendAndWaitForAnswer(this, req);
     }
 
@@ -43,8 +43,8 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
     public override void Write(string val)
     {
         var req = new Protocol()
-            .SetValue("DISPLAY_ACTION", "DISPLAY")
-            .SetValue("DISPLAY_CONTENT", val);
+            .SetString("DISPLAY_ACTION", "DISPLAY")
+            .SetString("DISPLAY_CONTENT", val);
         _server.SendAndWaitForAnswer(this, req);
     }
 }
