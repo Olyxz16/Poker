@@ -35,9 +35,15 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
         throw new NotImplementedException();
     }
 
-    public override void Prompt()
+    public override string Prompt()
     {
-        throw new NotImplementedException();
+        var req = new Protocol()
+            .SetString("GET", "PROMPT");
+        var answer = _server.SendAndWaitForAnswer(this, req);
+        if(!answer.Success) {
+            return "";
+        }
+        return answer.GetString("VALUE");
     }
 
     public override void SetCursorPosition(int x, int y)

@@ -132,8 +132,8 @@ public abstract class ConsolePlayer : Player, IDisplayable
 
     public abstract void Write(string val);
     public abstract void Clear();
-    public abstract void Prompt();
     public abstract void SetCursorPosition(int x, int y);
+    public abstract string Prompt();
     public abstract (int x, int y) GetSize();
     public abstract (int x, int y) GetCursorPosition();
     

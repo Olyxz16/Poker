@@ -20,9 +20,9 @@ public class LocalConsolePlayer : ConsolePlayer, IDisplayable
         Console.Clear();
     }
 
-    public override void Prompt()
+    public override string Prompt()
     {
-        Console.ReadLine();
+        return Console.ReadLine() ?? "";
     }
 
     public override void SetCursorPosition(int x, int y) 

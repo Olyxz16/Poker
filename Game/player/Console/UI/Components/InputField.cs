@@ -21,7 +21,7 @@ public class InputField : Component
     public string Prompt() {
         (int PreviousCursorX, int PreviousCursorY) = _frame.GetCursorPosition();
         _frame.SetCursorPosition(PosX + _prompt.Length, PosY);
-        var result = Console.ReadLine() ?? "";
+        var result = _frame.Prompt() ?? "";
         _frame.SetCursorPosition(PreviousCursorX, PreviousCursorY);
         return result;
     }

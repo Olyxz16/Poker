@@ -73,6 +73,12 @@ public class Frame
         _components.Clear();
     }
 
+    public string Prompt() {
+        if(_target == null) {
+            throw new NullReferenceException("Target cannot be null.");
+        }
+        return _target.Prompt();
+    }
     public void Display() {
         if(_target == null) {
             throw new NullReferenceException("Target cannot be null.");
