@@ -92,6 +92,9 @@ public class Game
             if(move.MoveType == MoveType.BET && allowed) {
                 _bets[player.Name] += move.BetValue;
                 player.Balance -= move.BetValue;
+            } else {
+                i--;
+                continue;
             }
         }
     }
