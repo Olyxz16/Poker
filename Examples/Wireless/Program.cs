@@ -1,5 +1,4 @@
 ﻿using Poker;
-using Poker.Players;
 using Poker.Players.Net;
 
 public class Program
@@ -20,9 +19,8 @@ public class Program
                 var address = args[index+1].Split(':');
                 ip = address[0];
                 port = int.Parse(address[1]);
-            } catch(Exception e) {
-                // Have to handle error.
-                Console.WriteLine(e);
+            } catch(Exception) {
+                throw;
             } finally {
                 _ = new Client(ip, port);
             }
