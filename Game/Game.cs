@@ -81,6 +81,7 @@ public class Game
             var player = remainingPlayers[i];
             var turn = i+1;
             var gameState = GetGameState(turn, player);
+            UpdatePlayersUI(remainingPlayers, gameState);
             var move = player.Play(gameState);
             if(move.MoveType == MoveType.FOLD) {
                 remainingPlayers.Remove(player);
@@ -103,6 +104,9 @@ public class Game
 
     public GameState GetGameState(int turn, Player player) {
         return new GameState(_round, turn, _bank, player, _bets, _flop);
+    }
+    private static void UpdatePlayersUI(List<Player> remainingPlayers, GameState gameState) {
+        remainingPlayers.ForEach(p => p.UpdateUI(gameState));
     }
 
 

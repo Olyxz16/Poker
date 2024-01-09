@@ -36,6 +36,9 @@ public abstract class Player
         }
         return chosenMove;
     }
+    public void UpdateUI(GameState state) {
+        DisplayGameState(state);
+    }
 
     protected internal void DrawHand(List<Card> cards) {
         if(cards.Count != 2) {
