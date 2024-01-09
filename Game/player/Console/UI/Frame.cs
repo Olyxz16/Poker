@@ -71,6 +71,7 @@ public class Frame
 
     public void ClearComponents() {
         _components.Clear();
+        _components.Add(_canvas);
     }
 
     public string Prompt() {
