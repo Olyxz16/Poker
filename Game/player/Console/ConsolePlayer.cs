@@ -56,6 +56,7 @@ public abstract class ConsolePlayer : Player, IDisplayable
         frame.SetBorder('*');
         
         CreateHandUI();
+        CreateTitleUI(state);
         CreateFlopUI(state);
         CreateBetsUI(state);
 
@@ -85,6 +86,13 @@ public abstract class ConsolePlayer : Player, IDisplayable
         frame.Display();
     }
 
+    private void CreateTitleUI(GameState state) {
+        var text = state.Player == this ? 
+            "Your turn !" :
+            $"{state.Player.Name}'s turn.";
+        var titleUI = new TextField(text);
+        frame.AddComponent(titleUI, frame.Center.X - titleUI.SizeX/2, 5);
+    }
     private void CreateHandUI() {
         var HandCard1UI = new CardUI(Hand[0]);
         frame.AddComponent(HandCard1UI, frame.Center.X - HandCard1UI.SizeX/2 - 2, frame.Center.Y + 10);
