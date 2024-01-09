@@ -58,7 +58,8 @@ public class Client : TCPCommunicator
 
     private void Display(string value) {
         Regex pattern = new("\n");
-        value = pattern.Replace(value, "\r");
+        value = pattern.Replace(value, "");
+        Console.Write(value);
     }
     private void Clear() {
         Console.Clear();
