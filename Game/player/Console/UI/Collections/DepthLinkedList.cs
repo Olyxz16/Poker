@@ -51,11 +51,11 @@ public class DepthLinkedList : LinkedList<Component>
 
     public new IEnumerator<Component> GetEnumerator()  // IEnumerable<int> works too.
     {
-        var pivot = this.Last;
+        var pivot = this.First;
         while(pivot != null) {
             yield return pivot.Value;
-            pivot = pivot.Previous;
-        }    
+            pivot = pivot.Next;
+        }
     }
 
 }
