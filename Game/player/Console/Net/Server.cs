@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Poker.Players.Net;
 
-public sealed class Server
+public sealed class Server : TCPCommunicator
 {
 
     internal const string HOST = "127.0.0.1";
@@ -54,36 +54,10 @@ public sealed class Server
         Send(targetClient, request);
         var answer = Receive(targetClient);
     }
-     
-     private void Send(TcpClient client, Protocol value) {
-        var stream = client.GetStream();
-        var data = Encoding.UTF8.GetBytes(value.Serialize());
-        var dataSize = GetDataSizeString(data);
-        stream.Write(dataSize);
-        stream.Write(data, 0, data.Length);
-    }
-    private static byte[] GetDataSizeString(byte[] data) {
-        var len = data.Length;
-        var result = len.ToString().PadLeft(10, '0');
-        return Encoding.UTF8.GetBytes(result);
-    }
-    private Protocol Receive(TcpClient client) {
-        var stream = client.GetStream();
-        while(!stream.DataAvailable);
-        var data = new byte[client.Available];
-        stream.Read(data, 0, data.Length);
-        var result = Protocol.Parse(Encoding.UTF8.GetString(data));
-        return result;
-    }
 
 
     private void HandleHandshake(TcpClient client) {
-        var stream = client.GetStream();
-        while(!stream.DataAvailable);
-        var bytes = new byte[client.Available];
-        stream.Read(bytes, 0, bytes.Length);
-        var data = Protocol.Parse(Encoding.UTF8.GetString(bytes));
-        
+        var data = Receive(client);
         int sizeX = data.GetInt("X");
         int sizeY = data.GetInt("Y");
         int id = GenerateID();

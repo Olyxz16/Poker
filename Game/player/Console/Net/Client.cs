@@ -1,11 +1,10 @@
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Poker.Players.Net;
 
-public class Client
+public class Client : TCPCommunicator
 {
     
     private const string HOST = Server.HOST;
@@ -28,42 +27,15 @@ public class Client
         var sendValue = new Protocol()
             .SetInt("X", Console.WindowWidth)
             .SetInt("Y", Console.WindowHeight);
-        Send(sendValue);
-    }
-
-    private void Send(Protocol value) {
-        var stream = _client.GetStream();
-        var data = Encoding.UTF8.GetBytes(value.Serialize());
-        stream.Write(data, 0, data.Length);
-    }
-    private Protocol Receive() {
-        var stream = _client.GetStream();
-        while(!stream.DataAvailable || _client.Available<10);
-        var data = new byte[10];
-        stream.Read(data, 0, data.Length);
-
-        var sizeData = Encoding.UTF8.GetString(data);
-        uint size = uint.Parse(sizeData);
-
-        while(_client.Available != size);
-        data = new byte[size];
-        stream.Read(data, 0, data.Length);
-
-        Protocol result;
-        try {
-            result = Protocol.Parse(Encoding.UTF8.GetString(data));
-        } catch (Exception) {
-            result = new Protocol();
-        }
-        return result;
+        Send(_client, sendValue);
     }
 
 
     private void WaitAndAnswer() {
         while(true) {
-            var request = Receive();
+            var request = Receive(_client);
             var answer = ParseAnswer(request);
-            Send(answer);
+            Send(_client, answer);
         }
     }
 
