@@ -49,10 +49,11 @@ public sealed class Server : TCPCommunicator
     }
 
 
-    public void SendAndWaitForAnswer(RemoteConsolePlayer player, Protocol request) {
+    public Protocol SendAndWaitForAnswer(RemoteConsolePlayer player, Protocol request) {
         var targetClient = _clients[player.NetID];
         Send(targetClient, request);
         var answer = Receive(targetClient);
+        return answer;
     }
 
 
