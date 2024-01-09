@@ -38,10 +38,12 @@ public class Client
     }
     private Protocol Receive() {
         var stream = _client.GetStream();
-        while(!stream.DataAvailable);
-        var data = new byte[32];
+        while(!stream.DataAvailable || _client.Available<10);
+        var data = new byte[10];
         stream.Read(data, 0, data.Length);
-        int size = int.Parse(Encoding.UTF8.GetString(data));
+
+        var sizeData = Encoding.UTF8.GetString(data);
+        uint size = uint.Parse(sizeData);
 
         while(_client.Available != size);
         data = new byte[size];

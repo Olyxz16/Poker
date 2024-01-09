@@ -54,12 +54,18 @@ public sealed class Server
         Send(targetClient, request);
         var answer = Receive(targetClient);
     }
-
+     
      private void Send(TcpClient client, Protocol value) {
         var stream = client.GetStream();
         var data = Encoding.UTF8.GetBytes(value.Serialize());
-        stream.Write(Encoding.UTF8.GetBytes(data.Length.ToString()));
+        var dataSize = GetDataSizeString(data);
+        stream.Write(dataSize);
         stream.Write(data, 0, data.Length);
+    }
+    private static byte[] GetDataSizeString(byte[] data) {
+        var len = data.Length;
+        var result = len.ToString().PadLeft(10, '0');
+        return Encoding.UTF8.GetBytes(result);
     }
     private Protocol Receive(TcpClient client) {
         var stream = client.GetStream();
