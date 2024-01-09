@@ -6,16 +6,25 @@ public class Protocol
 {
     
     public IReadOnlyList<object> Keys => _values.Keys.ToList();
-
     private Dictionary<string, object> _values;
-    
+
+    public bool Success { get; private set; }
 
 
     public Protocol() {
         _values = new Dictionary<string, object>();
+        Success = true;
     }
     private Protocol(Dictionary<string, object> from) {
         _values = from;
+        Success = true;
+    }
+    public static Protocol Error() {
+        var protocol = new Protocol
+        {
+            Success = false
+        };
+        return protocol;
     }
 
     public bool ContainsKey(string key) {
