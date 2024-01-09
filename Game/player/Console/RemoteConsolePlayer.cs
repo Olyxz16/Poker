@@ -27,12 +27,28 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
 
     public override (int x, int y) GetSize()
     {
-        throw new NotImplementedException();
+        var req = new Protocol()
+            .SetString("GET", "SIZE");
+        var answer = _server.SendAndWaitForAnswer(this, req);
+        if(!answer.Success) {
+            return (-1, -1);
+        }
+        var x = answer.GetInt("X");
+        var y = answer.GetInt("Y");
+        return (x, y);
     }
 
     public override (int x, int y) GetCursorPosition()
     {
-        throw new NotImplementedException();
+        var req = new Protocol()
+            .SetString("GET", "CURSOR");
+        var answer = _server.SendAndWaitForAnswer(this, req);
+        if(!answer.Success) {
+            return (-1, -1);
+        }
+        var x = answer.GetInt("X");
+        var y = answer.GetInt("Y");
+        return (x, y);
     }
 
     public override string Prompt()
@@ -48,7 +64,11 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
 
     public override void SetCursorPosition(int x, int y)
     {
-        throw new NotImplementedException();
+        var req = new Protocol()
+            .SetString("SET", "CURSOR")
+            .SetInt("X", x)
+            .SetInt("Y", y);
+        _server.SendAndWaitForAnswer(this, req);
     }
 
     public override void Write(string val)

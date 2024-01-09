@@ -42,16 +42,68 @@ public class Client : TCPCommunicator
 
     private Protocol ParseAnswer(Protocol request) {
         if(request.ContainsKey("DISPLAY_ACTION")) {
-            switch(request.GetString("DISPLAY_ACTION")) {
-                case "DISPLAY": {
-                    var content = request.GetString("DISPLAY_CONTENT");
-                    Display(content);
-                }; break;
-                case "CLEAR": Clear(); break;
-            }
+            return ParseDisplayAction(request);
         }
+        if(request.ContainsKey("GET")) {
+            return ParseGetRequest(request);
+        }
+        if(request.ContainsKey("SET")) {
+            return ParseSetRequest(request);
+        }
+        return new Protocol();
+    }
+
+    private Protocol ParseGetRequest(Protocol request) {
+        switch(request.GetString("GET")) {
+            case "SIZE": return ParseSize();
+            case "CURSOR": return ParseCursorPos();
+            case "PROMPT": return ParsePrompt();
+            default: break;
+        }
+        return new Protocol();
+    }
+    private static Protocol ParseSize() {
         return new Protocol()
-            .SetString("STATUS", "OK");
+            .SetInt("X", Console.WindowWidth)
+            .SetInt("Y", Console.WindowHeight);
+    }
+    private static Protocol ParseCursorPos() {
+        (int x, int y) = Console.GetCursorPosition();
+        return new Protocol()
+            .SetInt("X", x)
+            .SetInt("Y", y);
+    }
+    private static Protocol ParsePrompt() {
+        var value = Console.ReadLine() ?? "";
+        return new Protocol()
+            .SetString("VALUE", value);
+    }
+
+
+    private Protocol ParseSetRequest(Protocol request) {
+        switch(request.GetString("SET")) {
+            case "CURSOR": return ParseSetCursor(request);
+            default: break;
+        }
+        return new Protocol();
+    }
+    private Protocol ParseSetCursor(Protocol request) {
+        int x = request.GetInt("X");
+        int y = request.GetInt("Y");
+        Console.SetCursorPosition(x, y);
+        return new Protocol();
+    }
+
+
+    private Protocol ParseDisplayAction(Protocol request) {
+        switch(request.GetString("DISPLAY_ACTION")) {
+            case "DISPLAY": {
+                var content = request.GetString("DISPLAY_CONTENT");
+                Display(content);
+            }; break;
+            case "CLEAR": Clear(); break;
+        }
+        return new Protocol();
     }
 
 
