@@ -30,6 +30,11 @@ public class RemoteConsolePlayer : ConsolePlayer, IDisplayable
         throw new NotImplementedException();
     }
 
+    public override (int x, int y) GetCursorPosition()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void Prompt()
     {
         throw new NotImplementedException();

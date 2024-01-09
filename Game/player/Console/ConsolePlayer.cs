@@ -18,7 +18,7 @@ public abstract class ConsolePlayer : Player, IDisplayable
 
     protected override Move ChoseMove(GameState state)
     {
-        var inputField = new InputField("Enter input : ");
+        var inputField = new InputField(frame, "Enter input : ");
         frame.AddComponent(inputField, frame.Center.X - 7, frame.Center.Y + 5, true);
         var input = inputField.Prompt();
         Move move;
@@ -135,5 +135,6 @@ public abstract class ConsolePlayer : Player, IDisplayable
     public abstract void Prompt();
     public abstract void SetCursorPosition(int x, int y);
     public abstract (int x, int y) GetSize();
-
+    public abstract (int x, int y) GetCursorPosition();
+    
 }

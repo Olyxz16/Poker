@@ -36,6 +36,11 @@ public class LocalConsolePlayer : ConsolePlayer, IDisplayable
         return (x,y);
     }
 
-    
-    
+    public override (int x, int y) GetCursorPosition()
+    {
+        return Console.GetCursorPosition();
+    }
+
+
+
 }

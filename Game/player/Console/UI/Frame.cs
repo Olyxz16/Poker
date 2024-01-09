@@ -35,6 +35,12 @@ public class Frame
         }
         _target.SetCursorPosition(x,y);
     }
+    public (int x, int y) GetCursorPosition() {
+        if(_target == null) {
+            throw new NullReferenceException("Target cannot be null.");
+        }
+        return _target.GetCursorPosition();
+    }
 
     public void SetCharAt(char c, int x, int y) {
         _canvas.SetCharAt(c,x,y);
