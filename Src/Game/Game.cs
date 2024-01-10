@@ -49,6 +49,7 @@ public class Game
         Player winner = _players[0];
         while(Players.Count > 1) {
             winner = PlayGame() ?? winner;
+            ConfirmEndGame(_players, GameEndState.Win(winner));
             RemoveLosers();
         }
         return winner;
@@ -110,6 +111,17 @@ public class Game
     }
     private static void UpdatePlayersUI(List<Player> remainingPlayers, GameState gameState) {
         remainingPlayers.ForEach(p => p.UpdateUI(gameState));
+    }
+    // TODO Refactor this mess
+    private static void ConfirmEndGame(List<Player> remainingPlayers, GameEndState state) {
+        Task.Run(async () => {
+            var tasks = new List<Task<bool>>();
+            foreach(var p in remainingPlayers) {
+                var task = Task.Run(() => p.ConfirmGameEnd(state));
+                tasks.Add(task);
+            }
+            await Task.WhenAll(tasks);
+        }).GetAwaiter().GetResult();
     }
 
 

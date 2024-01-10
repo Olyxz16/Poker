@@ -24,7 +24,7 @@ public abstract class Player
     protected abstract Move ChoseMove(GameState state);
     protected abstract void DisplayGameState(GameState state);
     protected abstract void DisplayErrorMessage(string message);
-    
+    public abstract Task<bool> ConfirmGameEnd(GameEndState state);
 
     public Move Play(GameState state) {
         Move chosenMove = ChoseMove(state);
