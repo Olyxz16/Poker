@@ -63,6 +63,11 @@ public abstract class ConsolePlayer : Player, IDisplayable
         var nameUI = new TextField(Name);
         frame.AddComponent(nameUI, 4, 2);
 
+        var smallBlindUI = new TextField($"Small blind : {Game.SMALL_BLIND}");
+        frame.AddComponent(smallBlindUI, 4, 5);
+        var bigBlindUI = new TextField($"Big blind : {Game.BIG_BLIND}");
+        frame.AddComponent(bigBlindUI, 4, 7);
+
         string balanceText = $"Balance: {Balance}";
         var balanceUI = new TextField(balanceText);
         frame.AddComponent(balanceUI, frame.SizeX - balanceText.Length - 4, frame.SizeY - 3);
