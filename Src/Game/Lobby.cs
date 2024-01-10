@@ -5,14 +5,13 @@ namespace Poker;
 
 public class Lobby
 {
-    
-    private readonly int _balance;
+
     private readonly List<Player> _players;
     private readonly Server server;
 
     public Lobby() : this(Game.DEFAULT_BALANCE) {}
     public Lobby(int balance) {
-        _balance = balance;
+        Game.DEFAULT_BALANCE = balance;
         _players = new List<Player>();
         server = Server.Instance;
         server.OnPlayerAddEvent += AddPlayer;

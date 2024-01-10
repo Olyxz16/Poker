@@ -6,7 +6,7 @@ namespace Poker;
 public class Game
 {
 
-    public const int DEFAULT_BALANCE = 100;
+    public static int DEFAULT_BALANCE = 100;
     public readonly static int SMALL_BLIND = 10;
     public static int BIG_BLIND => 2*SMALL_BLIND;
 

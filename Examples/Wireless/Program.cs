@@ -30,7 +30,7 @@ public class Program
 
 
     private static void HostGame() {
-        var lobby = new Lobby();
+        var lobby = new Lobby(500);
         var players = lobby.WaitForPlayers();
         var game = new Game(players);
         game.Play();

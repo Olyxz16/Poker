@@ -63,7 +63,7 @@ public sealed class Server : TCPCommunicator
         int sizeY = data.GetInt("Y");
         int id = GenerateID();
         _clients.Add(id,client);
-        var player = new RemoteConsolePlayer(100, id, sizeX, sizeY);
+        var player = new RemoteConsolePlayer(Game.DEFAULT_BALANCE, id, sizeX, sizeY);
         OnPlayerAddEvent?.Invoke(player);
     }
 
