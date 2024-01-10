@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Poker.Players.Net;
+namespace Poker.Net;
 
 public class Protocol
 {

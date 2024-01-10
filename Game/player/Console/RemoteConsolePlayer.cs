@@ -1,5 +1,5 @@
 using GUISharp;
-using Poker.Players.Net;
+using Poker.Net;
 
 namespace Poker.Players;
 

@@ -1,5 +1,5 @@
 ﻿using Poker;
-using Poker.Players.Net;
+using Poker.Net;
 
 public class Program
 {

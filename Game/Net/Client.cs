@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
-namespace Poker.Players.Net;
+namespace Poker.Net;
 
 public class Client : TCPCommunicator
 {

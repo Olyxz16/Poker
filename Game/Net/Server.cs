@@ -1,8 +1,8 @@
+using Poker.Players;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
-namespace Poker.Players.Net;
+namespace Poker.Net;
 
 public sealed class Server : TCPCommunicator
 {

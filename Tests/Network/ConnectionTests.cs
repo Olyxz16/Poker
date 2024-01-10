@@ -1,5 +1,5 @@
 using Poker.Players;
-using Poker.Players.Net;
+using Poker.Net;
 
 namespace Tests;
 
