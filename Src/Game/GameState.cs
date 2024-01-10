@@ -27,12 +27,4 @@ public struct GameState
         };
     }
 
-    public override string ToString()
-    {
-        return $"Round: {Round}\n" +
-               $"Turn: {Turn}\n" +
-               $"Bank: {Bank}\n" +
-               $"Player: {Player.Name}\n";
-    }
-
 }
