@@ -27,7 +27,6 @@ public abstract class Player
     
 
     public Move Play(GameState state) {
-        DisplayGameState(state);
         Move chosenMove = ChoseMove(state);
         while(!Move.IsValid(state, chosenMove, out string errorMessage))
         {
