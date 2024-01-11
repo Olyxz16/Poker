@@ -146,23 +146,25 @@ public abstract class ConsolePlayer : Player, IDisplayable
 
     public override async Task<bool> ConfirmGameEnd(GameEndState state)
     {
-        frame.ClearComponents();
-        frame.SetBorder('*');
+        await Task.Run(() => {
+            frame.ClearComponents();
+            frame.SetBorder('*');
 
-        if(state.IsDraw) {
-            var textField = new TextField("Draw");
-            frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
+            if(state.IsDraw) {
+                var textField = new TextField("Draw");
+                frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
 
-        } else {
-            var textField = new TextField($"{state.Winner.Name} won.");
-            frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
-        }
+            } else {
+                var textField = new TextField($"{state.Winner.Name} won.");
+                frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
+            }
 
-        var confirmField = new InputField(this.frame, "Press anything to play again.");
-        frame.AddComponent(confirmField, frame.Center.X - confirmField.SizeX/2, frame.Center.Y + 5);
+            var confirmField = new InputField(this.frame, "Press anything to play again.");
+            frame.AddComponent(confirmField, frame.Center.X - confirmField.SizeX/2, frame.Center.Y + 5);
 
-        frame.Display();
-        frame.Prompt();
+            frame.Display();
+            frame.Prompt();
+        });
         return true;
     }
 
