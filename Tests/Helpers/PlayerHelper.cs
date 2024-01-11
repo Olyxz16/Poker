@@ -33,4 +33,9 @@ public class PlayerHelper : Player
     protected override void DisplayErrorMessage(string message) {}
 
     protected override void DisplayGameState(GameState state) {}
+
+    public override async Task<bool> ConfirmGameEnd(GameEndState state)
+    {
+        return await Task.Run(() => {return true;});
+    }
 }
