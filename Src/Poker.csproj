@@ -9,4 +9,8 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Keras.NET" Version="3.8.5" />
+  </ItemGroup>
+
 </Project>
