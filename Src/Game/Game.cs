@@ -1,4 +1,5 @@
 using Poker.Cards;
+using Poker.Events;
 using Poker.Players;
 
 namespace Poker;
@@ -24,6 +25,13 @@ public class Game
     protected Deck _deck;
     protected int _bank;
     protected int _round;
+    
+
+    public delegate void PlayerMoveEventHandler(object sender, PlayerMoveEventArgs e);
+    public static event PlayerMoveEventHandler? PlayerMoveEvent;
+
+    public delegate void GameEndEventHandler(object sender, GameEndEventArgs e);
+    public static event GameEndEventHandler? GameEndEvent;
 
 
     public Game(List<Player> players) {
@@ -84,6 +92,7 @@ public class Game
             var gameState = GetGameState(turn, player);
             UpdatePlayersUI(remainingPlayers, gameState);
             var move = player.Play(gameState);
+            PlayerMoveEvent?.Invoke(this, new PlayerMoveEventArgs(gameState, move));
             if(move.MoveType == MoveType.FOLD) {
                 remainingPlayers.Remove(player);
                 i--;
@@ -113,7 +122,7 @@ public class Game
         remainingPlayers.ForEach(p => p.UpdateUI(gameState));
     }
     // TODO Refactor this mess
-    private static void ConfirmEndGame(List<Player> remainingPlayers, GameEndState state) {
+    private void ConfirmEndGame(List<Player> remainingPlayers, GameEndState state) {
         Task.Run(async () => {
             var tasks = new List<Task<bool>>();
             foreach(var p in remainingPlayers) {
@@ -122,6 +131,7 @@ public class Game
             }
             await Task.WhenAll(tasks);
         }).GetAwaiter().GetResult();
+        GameEndEvent?.Invoke(this, new GameEndEventArgs(state));
     }
 
 
