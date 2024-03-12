@@ -36,7 +36,7 @@ public class NeuralNetPlayer : Player
         var player = state.Player;
         var balance = player.Balance;
         var flop = state.Flop;
-        var maxPot = state.Bets.Max().Value;
+        var maxPot = state.Bets.Values.Max();
 
         var inputs = new List<double>();
         var playerCard1 = WeightUtils.WeightsFromCard(player.Hand[0]);

@@ -9,7 +9,7 @@ public static class WeightUtils {
     // Move
     public static Move MoveFromOutput(NDarray output, GameState state) {
         var ind = MaxInd(output);
-        var maxBet = state.Bets.Max().Value;
+        var maxBet = state.Bets.Values.Max();
         return ind switch {
             0 => Move.Fold(),
             1 => Move.Bet(0),
