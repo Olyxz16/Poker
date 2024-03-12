@@ -41,11 +41,11 @@ public class NeuralNetPlayer : Player
         var inputs = new List<double>();
         var playerCard1 = WeightUtils.WeightsFromCard(player.Hand[0]);
         var playerCard2 = WeightUtils.WeightsFromCard(player.Hand[1]);
-        var flopCard1 = WeightUtils.WeightsFromCard(flop[0]);
-        var flopCard2 = WeightUtils.WeightsFromCard(flop[1]);
-        var flopCard3 = WeightUtils.WeightsFromCard(flop[2]);
-        var flopCard4 = WeightUtils.WeightsFromCard(flop[3]);
-        var flopCard5 = WeightUtils.WeightsFromCard(flop[4]);
+        var flopCard1 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(0));
+        var flopCard2 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(1));
+        var flopCard3 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(2));
+        var flopCard4 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(3));
+        var flopCard5 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(4));
         var maxPotVal = Math.Min(maxPot / player.Balance, 1);
         var balanceVal = WeightUtils.WeightFromBalance(balance);
 
