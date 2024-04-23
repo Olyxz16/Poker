@@ -6,27 +6,30 @@ public struct GameEndState
 {
 
     public readonly bool IsDraw;
-
+    
+    public List<Player> Players;
     public Player Winner;
     public List<Player> Winners;
 
-    private GameEndState(Player winner) {
+    private GameEndState(List<Player> players, Player winner) {
         IsDraw = false;
+        Players = players;
         Winner = winner;
         Winners = new List<Player>(0);
     }
-    private GameEndState(List<Player> winners) {
+    private GameEndState(List<Player> players, List<Player> winners) {
         IsDraw = true;
+        Players = players;
         Winner = winners.First();
         Winners = winners;
     }
 
 
-    public static GameEndState Win(Player winner) {
-        return new GameEndState(winner);
+    public static GameEndState Win(List<Player> players, Player winner) {
+        return new GameEndState(players, winner);
     }
-    public static GameEndState Draw(List<Player> winners) {
-        return new GameEndState(winners);
+    public static GameEndState Draw(List<Player> players, List<Player> winners) {
+        return new GameEndState(players, winners);
     }
 
 }

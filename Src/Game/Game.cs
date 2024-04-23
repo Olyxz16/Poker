@@ -26,9 +26,9 @@ public class Game
     protected int _bank;
     protected int _round;
     
-
-    public delegate void PlayerMoveEventHandler(object sender, PlayerMoveEventArgs e);
-    public static event PlayerMoveEventHandler? PlayerMoveEvent;
+    
+    public delegate void GameStartEventHandler(object sender, GameStartEventArgs e);
+    public static event GameStartEventHandler? GameStartEvent;
 
     public delegate void GameEndEventHandler(object sender, GameEndEventArgs e);
     public static event GameEndEventHandler? GameEndEvent;
@@ -45,6 +45,8 @@ public class Game
         _bank = 0;
         _round = 0;
 
+        GameStartEvent?.Invoke(this, new GameStartEventArgs(_players));
+
     }
 
     private static Deck GetNewShuffledDeck() {
@@ -57,7 +59,7 @@ public class Game
         Player winner = _players[0];
         while(Players.Count > 1) {
             winner = PlayGame() ?? winner;
-            ConfirmEndGame(_players, GameEndState.Win(winner));
+            ConfirmEndGame(_players, GameEndState.Win(_players, winner));
             RemoveLosers();
         }
         return winner;
@@ -92,7 +94,6 @@ public class Game
             var gameState = GetGameState(turn, player);
             UpdatePlayersUI(remainingPlayers, gameState);
             var move = player.Play(gameState);
-            PlayerMoveEvent?.Invoke(this, new PlayerMoveEventArgs(gameState, move));
             if(move.MoveType == MoveType.FOLD) {
                 remainingPlayers.Remove(player);
                 i--;
