@@ -1,7 +1,7 @@
 using Keras;
 using Keras.Layers;
 using Keras.Models;
-using Numpy;
+using Poker.Events;
 using Poker.Players.IA.Utils;
 
 namespace Poker.Players.IA;
@@ -10,7 +10,9 @@ public class NeuralNetPlayer : Player
 {
 
     public Sequential Model { get; private set; }
-
+    
+    public delegate void OnPlayerMoveEventHandler(object sender, PlayerMoveEventArgs e);
+    public event OnPlayerMoveEventHandler? OnPlayerMoveEvent;
 
     public NeuralNetPlayer(int balance) : base(balance)
     {
@@ -19,59 +21,38 @@ public class NeuralNetPlayer : Player
     }
     public NeuralNetPlayer(int balance, string weightFile) : base(balance) {
         // Problème d'ordre d'exécution ?
-        Model = Load(weightFile);
+        //Model = Load(weightFile);
+        Model = new Sequential();
         Init();
+        Model.LoadWeight(weightFile);
     }
 
 
     protected override Move ChoseMove(GameState state)
     {
-        var input = InputFromState(state);
-        var output = Model.Predict(input);
+        var input = WeightUtils.InputFromState(state);
+        input = input.reshape(1, 16);
+        var output = Model.Predict(input, verbose:0);
+        OnPlayerMoveEvent?.Invoke(this, new PlayerMoveEventArgs(this, input, output));
         var move = WeightUtils.MoveFromOutput(output, state);
         return move;
-    }
-    
-    private static NDarray InputFromState(GameState state) {
-        var player = state.Player;
-        var balance = player.Balance;
-        var flop = state.Flop;
-        var maxPot = state.Bets.Values.Max();
-
-        var inputs = new List<double>();
-        var playerCard1 = WeightUtils.WeightsFromCard(player.Hand[0]);
-        var playerCard2 = WeightUtils.WeightsFromCard(player.Hand[1]);
-        var flopCard1 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(0));
-        var flopCard2 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(1));
-        var flopCard3 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(2));
-        var flopCard4 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(3));
-        var flopCard5 = WeightUtils.WeightsFromCard(flop.ElementAtOrDefault(4));
-        var maxPotVal = Math.Min(maxPot / player.Balance, 1);
-        var balanceVal = WeightUtils.WeightFromBalance(balance);
-
-        inputs.AddRange(playerCard1);
-        inputs.AddRange(playerCard2);
-        inputs.AddRange(flopCard1);
-        inputs.AddRange(flopCard2);
-        inputs.AddRange(flopCard3);
-        inputs.AddRange(flopCard4);
-        inputs.AddRange(flopCard5);
-        inputs.Add(maxPotVal);
-        inputs.Add(balanceVal);
-        
-        return np.array(inputs.ToArray());
     }
 
 
     private void Init() {
-        Model.Add(new Dense(32, activation: "relu", input_shape: new Shape(16)));
-        Model.Add(new Dense(64, activation: "relu"));
+        Model.Add(new Dense(256, activation: "relu", input_shape: new Shape(16)));
+        Model.Add(new Dense(256, activation: "relu"));
         Model.Add(new Dense(5, activation: "sigmoid"));
         
         Model.Compile(optimizer:"sgd", loss:"binary_crossentropy", metrics: new string[] { "accuracy" });
     }
-    public void Save(string fileName) {
-        Model.SaveWeight(fileName);
+    public void Save(string path) {
+        var p = Path.GetFullPath(path);
+        if(!File.Exists(p)) {
+            Directory.CreateDirectory(Path.GetDirectoryName(p) ?? "");
+            File.Create(p);
+        }
+        Model.SaveWeight(p);
     }
     public static Sequential Load(string fileName) {
         var model = new Sequential();
@@ -86,7 +67,9 @@ public class NeuralNetPlayer : Player
         return Task.Run(() => true);
     }
     protected override void DisplayErrorMessage(string message)
-    {}
+    {
+        Console.WriteLine(message);
+    }
     protected override void DisplayGameState(GameState state)
     {}
 
