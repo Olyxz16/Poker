@@ -50,7 +50,6 @@ public class NeuralNetPlayer : Player
         var p = Path.GetFullPath(path);
         if(!File.Exists(p)) {
             Directory.CreateDirectory(Path.GetDirectoryName(p) ?? "");
-            File.Create(p);
         }
         Model.SaveWeight(p);
     }

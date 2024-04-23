@@ -50,6 +50,7 @@ public class Program {
         if(save) {
             if(modelName == "") {
                 modelPath = Path.Join(modelPath, "model.h5");
+                modelPath = Path.GetFullPath(modelPath);
             }
             agent1.Save(modelPath);
         }
