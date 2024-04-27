@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Keras.NET" Version="3.8.5" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.43.0" />
   </ItemGroup>
 
 </Project>
