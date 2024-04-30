@@ -3,7 +3,7 @@ using Poker.Players;
 
 namespace Poker.Online;
 
-public class ReplayPokerGame : Game 
+public class ReplayPokerGame 
 {
     
     private const string ENV_FILE = @"./.env";
@@ -13,19 +13,23 @@ public class ReplayPokerGame : Game
     private bool debug = true;
     private int target_price = 1;
     private int max_free_seat = 2;
+        
+    private Player _player;
 
-    public ReplayPokerGame(Player player) : base(new List<Player>() { player }) {
-        Task.Run(async () => {
-            UpdateEnv();
-            var browser = await Init();
-            await Login(browser); 
-            var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
-            await JoinRoom(browser, room.URL);
-            
-            Console.ReadKey();
-        }).Wait();
+    public ReplayPokerGame(Player player) {
+        _player = player;
     }
 
+    public async Task Play() {
+        UpdateEnv();
+        var browser = await Init();
+        await Login(browser); 
+        var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
+        var page = await JoinRoom(browser, room.URL);
+        //await Run(page);
+
+        Console.ReadKey();
+    }
     private async Task<IBrowserContext> Init() {
         var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Firefox.LaunchAsync(new() {
@@ -60,8 +64,7 @@ public class ReplayPokerGame : Game
         await page.Locator("#password").FillAsync(pass);
         await page.Locator("button").Filter(new() { HasText = "Log in" }).ClickAsync();
         await page.CloseAsync();
-    }
-    
+    } 
     private async Task<Room> FetchRoom(IBrowserContext browser, RoomParams pars = new()) {
         var page = await browser.NewPageAsync();
         await page.GotoAsync(ROOMS_URL);
@@ -112,12 +115,23 @@ public class ReplayPokerGame : Game
     private async Task CloseBlockingPane(IPage page) {
         await page.Locator("#inApp-big-content").GetByLabel("Close").ClickAsync(); 
     }
-
-    private async Task JoinRoom(IBrowserContext browser, string url) {
+    private async Task<IPage> JoinRoom(IBrowserContext browser, string url) {
         var page = await browser.NewPageAsync();
         await page.GotoAsync(url);
-        await page.Locator("div.SitNowControls").Locator("button").ClickAsync();
+        //await page.Locator("div.SitNowControls").Locator("button").ClickAsync();
+        //await page.Locator("button.RadioButton:nth-child(2)").ClickAsync();
+        //await page.Locator("button").Filter(new() { HasText = "OK" }).ClickAsync();
+
+        return page;
     }
-
-
+    private async Task Run(IPage page) {
+        // run condition ?
+        //while(true) {
+            //
+            // generate gamestate
+            // get player move
+            // play
+        //}                    
+    }
+    
 }
