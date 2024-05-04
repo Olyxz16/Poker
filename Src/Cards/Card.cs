@@ -3,8 +3,8 @@ namespace Poker.Cards;
 public struct Card
 {
 
-    public int Rank { get; private set;}
-    public CardColor Color { get; private set; }
+    public int Rank { get; init; }
+    public CardColor Color { get; init; }
 
     public Card(int rank, CardColor color) {
         Rank = rank;
