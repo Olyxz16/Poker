@@ -1,5 +1,8 @@
 using Microsoft.Playwright;
+using Poker.Cards;
+using Poker.Online.Events;
 using Poker.Players;
+using Poker.Online.Utils;
 
 namespace Poker.Online;
 
@@ -14,10 +17,26 @@ public class ReplayPokerGame
     private int target_price = 1;
     private int max_free_seat = 2;
         
-    private Player _player;
+    private Player player;
+    private int round = -1;
+    private bool playing = false;
+
+    public delegate void GameStartEventHandler(object sender, GameStartEventArgs e);
+    public static event GameStartEventHandler? GameStartEvent;
+    public delegate void RoundStartEventHandler(object sender, RoundStartEventArgs e);
+    public static event RoundStartEventHandler? RoundStartEvent;
+    public delegate void OnPlayerTurnEventHandler(object sender, OnPlayerTurnEventArgs e);
+    public static event OnPlayerTurnEventHandler? OnPlayerTurnEvent;
+
+    // DEBUG
+    public delegate Task BoardFullDEBUGEventHandler(IPage page);
+    public static event BoardFullDEBUGEventHandler? BoardFullDEBUGEvent;
+
 
     public ReplayPokerGame(Player player) {
-        _player = player;
+        this.player = player;
+
+        BoardFullDEBUGEvent += CardUtils.SaveSvgImageCardPairs;
     }
 
     public async Task Play() {
@@ -25,10 +44,9 @@ public class ReplayPokerGame
         var browser = await Init();
         await Login(browser); 
         var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
-        var page = await JoinRoom(browser, room.URL);
-        //await Run(page);
+        var page = await JoinRoom(browser, room.URL);  
 
-        Console.ReadKey();
+        Run(page);
     }
     private async Task<IBrowserContext> Init() {
         var playwright = await Playwright.CreateAsync();
@@ -124,14 +142,61 @@ public class ReplayPokerGame
 
         return page;
     }
-    private async Task Run(IPage page) {
-        // run condition ?
-        //while(true) {
-            //
-            // generate gamestate
-            // get player move
-            // play
-        //}                    
+    private void Run(IPage page) {
+        GameStartEvent?.Invoke(this, new GameStartEventArgs());
+        
+        // Horrendous but it works
+        var running = true;
+        var tasks = new List<Task>();
+        var task = Task.Run(async () => {
+            while(running) {
+                await WaitForNewTurn(page);
+            }
+        });
+        tasks.Add(task);
+        task = Task.Run(async () => {
+            while(running) {
+                await WaitForYourTurn(page);
+            }
+        });
+        tasks.Add(task);
+        task = Task.Run(async() => {
+            while(running) {
+                await WaitForBoardFullDebug(page);
+            }
+        });
+        Task.WaitAll(tasks.ToArray());
     }
-    
+    private async Task WaitForNewTurn(IPage page) {
+        var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
+        while(round == 0 || await cardsLoc.CountAsync() > 0);
+        round = 0;
+        RoundStartEvent?.Invoke(this, new RoundStartEventArgs());
+    }
+    private async Task WaitForYourTurn(IPage page) {
+        var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
+        var playerLoc = page.Locator(".Seat.Seat--currentUser.Seat--currentPlayer");
+        while(playing || await playerLoc.CountAsync() < 1);
+        playing = true;
+
+        var cards = new List<Card>();
+        var cardsCountDEBUG = await cardsLoc.CountAsync();
+        round = cardsCountDEBUG switch {
+            0 => 1,
+            3 => 2,
+            4 => 3,
+            5 => 4,
+            _ => -1
+        };
+        var state = new GameState(round, 0, 0, player, new Dictionary<string, int>(), new List<Card>());
+        OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state));
+    }
+
+    private async Task WaitForBoardFullDebug(IPage page) {
+        var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card"); 
+        while(round == 5 || await cardsLoc.CountAsync() < 5);
+        round = 5;
+        BoardFullDEBUGEvent?.Invoke(page);
+    }
+
 }
