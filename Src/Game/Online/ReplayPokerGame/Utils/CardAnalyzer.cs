@@ -114,7 +114,7 @@ public class CardAnalyzer {
         if(outputContainsCard) {
             var other = outputs[index];
             if(other.SVG == pair.SVG) {
-                Console.WriteLine("Card dupe, SVG similar.");
+                Console.WriteLine("Card dupe, similar.");
             } else {
                 Console.WriteLine("Card dupe, DIFF SVG !!");
             }
