@@ -35,8 +35,9 @@ public class ReplayPokerGame
 
     public ReplayPokerGame(Player player) {
         this.player = player;
-
-        BoardFullDEBUGEvent += CardUtils.SaveSvgImageCardPairs;
+        
+        BoardFullDEBUGEvent += CardUtils.GetGameStateFromBoard;
+        //BoardFullDEBUGEvent += CardUtils.SaveSvgImageCardPairs;
     }
 
     public async Task Play() {
