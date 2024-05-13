@@ -18,8 +18,12 @@ class Program {
     }
 
     private static void Run() {
+        NeuralNetPlayer player = null;
+        var config = new ReplayPokerGameConfig() {
+            DEBUG = true
+        };
         Task.Run(async () => {
-                var game = new ReplayPokerGame(null);
+                var game = new ReplayPokerGame(player, config);
                 await game.Play(); 
 
                 }).Wait();
