@@ -1,11 +1,12 @@
 using Microsoft.Playwright;
-using Poker.Online.Events;
 using Poker.Players;
 using Poker.Online.Utils;
+using Poker.Events;
+using static Poker.IGameEvents;
 
 namespace Poker.Online;
 
-public class ReplayPokerGame 
+public class ReplayPokerGame : IGameEvents 
 {
     
     private const string ENV_FILE = @"./.env";
@@ -23,19 +24,15 @@ public class ReplayPokerGame
     private bool playing = false;
 
     private bool running = true;
-    private Task? session;
-        
-    public delegate void GameStartEventHandler(object sender, GameStartEventArgs e);
-    public static event GameStartEventHandler? GameStartEvent;
-    public delegate void RoundStartEventHandler(object sender, RoundStartEventArgs e);
-    public static event RoundStartEventHandler? RoundStartEvent;
-    public delegate void OnPlayerTurnEventHandler(object sender, OnPlayerTurnEventArgs e);
-    public static event OnPlayerTurnEventHandler? OnPlayerTurnEvent;
-    public delegate void GameEndEventHandler(object sender, GameEndEventArgs e);
-    public static event GameEndEventHandler? GameEndEvent;
-    public delegate void OnTableCloseEventHandler(object sender, IPage session);
-    public static event OnTableCloseEventHandler? OnTableCloseEvent;
+    private static Task? session;
+    public static IPage? Page { get; private set; } 
+    
+    public event GameStartEventHandler? GameStartEvent;
+    public event GameEndEventHandler? GameEndEvent;
+    public event OnPlayerTurnEventHandler? OnPlayerTurnEvent;
 
+    public delegate void OnTableCloseEventHandler(object sender);
+    public static event OnTableCloseEventHandler? OnTableCloseEvent;
     // DEBUG
     public delegate Task BoardFullDEBUGEventHandler(IPage page, Player player);
     public static event BoardFullDEBUGEventHandler? BoardFullDEBUGEvent;
@@ -46,7 +43,7 @@ public class ReplayPokerGame
         InitConfig(config);
         OnPlayerTurnEvent += PlayerUtils.PlayTurn;
         OnTableCloseEvent += Reload;
-        // BRANCHER L'EVENT DE FIN DE GAME
+        
         //BoardFullDEBUGEvent += CardUtils.GetGameStateFromBoard;
         //BoardFullDEBUGEvent += CardUtils.SaveSvgImageCardPairs;
     }
@@ -90,15 +87,18 @@ public class ReplayPokerGame
         var browser = await Init();
         await Login(browser); 
         var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
-        var page = await JoinRoom(browser, room.URL);  
+        Page = await JoinRoom(browser, room.URL);  
 
-        session = Run(page);
+        session = Run(Page);
         await session;
     }
-    private async void Reload(object sender, IPage page) {
-        var context = page.Context;
+    private async void Reload(object sender) {
+        if(Page == null) {
+            return;
+        }
+        var context = Page.Context;
         var browser = context.Browser;
-        await page.CloseAsync();
+        await Page.CloseAsync();
         await context.CloseAsync();
         if(browser != null) await browser.CloseAsync();
 
@@ -184,12 +184,9 @@ public class ReplayPokerGame
         //await page.Locator("div.SitNowControls").Locator("button").ClickAsync();
         //await page.Locator("button.RadioButton:nth-child(2)").ClickAsync();
         //await page.Locator("button").Filter(new() { HasText = "OK" }).ClickAsync();
-
         return page;
     }
     private Task Run(IPage page) {
-        GameStartEvent?.Invoke(this, new GameStartEventArgs());
-        
         // Horrendous but it works
         round = -1;
         playing = false;
@@ -224,7 +221,7 @@ public class ReplayPokerGame
         var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
         while(round == 0 || await cardsLoc.CountAsync() > 0);
         round = 0;
-        RoundStartEvent?.Invoke(this, new RoundStartEventArgs());
+        GameStartEvent?.Invoke(this, new GameStartEventArgs(new() { player }));
     }
     private async Task WaitForYourTurn(IPage page) {
         var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
@@ -233,7 +230,7 @@ public class ReplayPokerGame
         playing = true;
 
         var state = await CardUtils.GetGameStateFromBoard(page, player);
-        OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state, page));
+        OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state));
         while(await playerLoc.CountAsync() >= 1);
         playing = false;
     }
@@ -245,14 +242,14 @@ public class ReplayPokerGame
         var playerLocClass = await page.Locator(".Seat--currentUser").GetAttributeAsync("class") ?? ""; 
         var playerPos = PositionFromAttribute(playerLocClass);
         
-        var pot = await winningLoc.Locator("Stack__value").Locator("span").InnerTextAsync();
-
-        GameEndEvent?.Invoke(this, new GameEndEventArgs(winnerPos == playerPos ? player : null, Int32.Parse(pot)));
+        bool playerWon = winnerPos == playerPos;
+        var state = GameEndState.Win(new() { player }, playerWon ? player : null);
+        GameEndEvent?.Invoke(this, new GameEndEventArgs(state));
     }
     private async Task WaitForClosedTable(IPage page) {
         var closedLoc = page.Locator("h1").Filter(new() { HasText="Table fermée" });
         while(await closedLoc.CountAsync() < 1);
-        OnTableCloseEvent?.Invoke(this, page);
+        OnTableCloseEvent?.Invoke(this);
     }
     
     private async Task WaitForBoardFullDebug(IPage page) {

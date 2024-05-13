@@ -11,12 +11,12 @@ public class TrainingUtils {
     private readonly List<TrainingEntry> _trainingData = new();
 
 
-    public TrainingUtils() {
+    public TrainingUtils(IGameEvents gameEvents) {
         _entries = new();
         _trainingData = new();
 
-        Game.GameStartEvent += AddPlayerEvents;
-        Game.GameEndEvent += CompileResults;
+        gameEvents.GameStartEvent += AddPlayerEvents;
+        gameEvents.GameEndEvent += CompileResults;
     }
 
     public void AddPlayerEvents(object sender, GameStartEventArgs e) {
@@ -57,6 +57,9 @@ public class TrainingUtils {
 
     private void CompileResults(object sender, GameEndEventArgs e) {
         var winner = e.State.Winner;
+        if(winner == null) {
+            return;
+        }
         foreach(var (player, inputs, outputs) in _entries) {
             var reward = player == winner ? 1d : 0d;
             var data = new TrainingEntry(inputs, outputs, reward);

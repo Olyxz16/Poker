@@ -155,7 +155,7 @@ public abstract class ConsolePlayer : Player, IDisplayable
                 frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
 
             } else {
-                var textField = new TextField($"{state.Winner.Name} won.");
+                var textField = new TextField($"{state.Winner?.Name} won.");
                 frame.AddComponent(textField, frame.Center.X - textField.SizeX/2, frame.Center.Y + 2);
             }
 

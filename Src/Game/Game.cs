@@ -1,10 +1,11 @@
 using Poker.Cards;
 using Poker.Events;
 using Poker.Players;
+using static Poker.IGameEvents;
 
 namespace Poker;
 
-public class Game
+public class Game : IGameEvents
 {
 
     public static int DEFAULT_BALANCE = 100;
@@ -26,13 +27,9 @@ public class Game
     protected int _bank;
     protected int _round;
     
-    
-    public delegate void GameStartEventHandler(object sender, GameStartEventArgs e);
-    public static event GameStartEventHandler? GameStartEvent;
-
-    public delegate void GameEndEventHandler(object sender, GameEndEventArgs e);
-    public static event GameEndEventHandler? GameEndEvent;
-
+    public event GameStartEventHandler? GameStartEvent;
+    public event GameEndEventHandler? GameEndEvent;
+    public event OnPlayerTurnEventHandler? OnPlayerTurnEvent;
 
     public Game(List<Player> players) {
 
@@ -44,6 +41,10 @@ public class Game
 
         _bank = 0;
         _round = 0;
+
+        Console.WriteLine("1");
+
+        GameStartEvent += (object sender, GameStartEventArgs args) => { Console.WriteLine("2"); };
 
         GameStartEvent?.Invoke(this, new GameStartEventArgs(_players));
 
@@ -93,6 +94,7 @@ public class Game
             var turn = i+1;
             var gameState = GetGameState(turn, player);
             UpdatePlayersUI(remainingPlayers, gameState);
+            OnPlayerTurnEvent?.Invoke(this, new(gameState));
             var move = player.Play(gameState);
             if(move.MoveType == MoveType.FOLD) {
                 remainingPlayers.Remove(player);
