@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Poker.Cards;
+using Poker.Players;
 
 namespace Poker.Online.Utils;
 
@@ -12,7 +13,7 @@ public static class CardUtils {
     private const string jsonPath = @"./cards/raw.json";
     private static Dictionary<string, int> SVGToRank => CardSVGPair.Pairs;
 
-    public static async Task<GameState> GetGameStateFromBoard(IPage page) {
+    public static async Task<GameState> GetGameStateFromBoard(IPage page, Player player) {
         var turn = await GetTurn(page);
         var bank = await GetBank(page);
         var hand = await GetHand(page);
@@ -24,8 +25,9 @@ public static class CardUtils {
             5 => 4,
             _ => -1
         };
-
-        var state = new GameState(round, turn, bank, null, new(), flop);
+        Console.WriteLine(hand[0].ToString() + " " + hand[1].ToString()); 
+        player.DrawHand(hand);
+        var state = new GameState(round, turn, bank, player, new(), flop);
         return state;
     }
     private static async Task<int> GetTurn(IPage page) {
@@ -39,7 +41,13 @@ public static class CardUtils {
         return bank;
     }
     private static async Task<List<Card>> GetHand(IPage page) {
-        return new List<Card>();
+        var result = new List<Card>();
+        var cardsLoc = await page.Locator("div.Cards--mine").Locator(".Card").AllAsync();
+         foreach(var loc in cardsLoc) {
+            var card = await GetCard(loc);
+            result.Add(card);
+         }
+         return result;
     }
     private static async Task<List<Card>> GetFlop(IPage page) {
         var result = new List<Card>();
@@ -91,14 +99,16 @@ public static class CardUtils {
         }
         // For debug purposes
         Console.WriteLine("CARD RANK COULD NOT BE FOUND!!");
-        var errorPath = new Random().Next();
-        loc.ScreenshotAsync(new() { Path=$"./error/{errorPath}.png" });
+        ScreenCard(loc);
         return new Card(0,0);
     }
-
+    private static void ScreenCard(ILocator loc) {
+        var errorPath = new Random().Next();
+        loc.ScreenshotAsync(new() { Path=$"./error/{errorPath}.png" });
+    }
 
     public static async Task SaveSvgImageCardPairs(IPage page) {
-        List<CardSVGPair> pairs = new List<CardSVGPair>();
+        var pairs = new List<CardSVGPair>();
         Console.WriteLine("Trying to save board...");
         try { 
             pairs = InitPairs();

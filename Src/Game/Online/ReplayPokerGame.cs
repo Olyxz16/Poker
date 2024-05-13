@@ -1,5 +1,4 @@
 using Microsoft.Playwright;
-using Poker.Cards;
 using Poker.Online.Events;
 using Poker.Players;
 using Poker.Online.Utils;
@@ -13,49 +12,64 @@ public class ReplayPokerGame
     private const string BASE_URL = "https://www.replaypoker.com/";
     private const string ROOMS_URL = "https://www.replaypoker.com/lobby/rings/13366125";      
     
-    private bool debug = true;
-    private int target_price = 1;
-    private int max_free_seat = 2;
+    private string mail = "";
+    private string pass = "";
+    private int target_price;
+    private int max_free_seat;
+    private bool debug;
         
     private Player player;
     private int round = -1;
     private bool playing = false;
 
+    private bool running = true;
+    private Task? session;
+        
     public delegate void GameStartEventHandler(object sender, GameStartEventArgs e);
     public static event GameStartEventHandler? GameStartEvent;
     public delegate void RoundStartEventHandler(object sender, RoundStartEventArgs e);
     public static event RoundStartEventHandler? RoundStartEvent;
     public delegate void OnPlayerTurnEventHandler(object sender, OnPlayerTurnEventArgs e);
     public static event OnPlayerTurnEventHandler? OnPlayerTurnEvent;
+    public delegate void GameEndEventHandler(object sender, GameEndEventArgs e);
+    public static event GameEndEventHandler? GameEndEvent;
+    public delegate void OnTableCloseEventHandler(object sender, IPage session);
+    public static event OnTableCloseEventHandler? OnTableCloseEvent;
 
     // DEBUG
-    public delegate Task BoardFullDEBUGEventHandler(IPage page);
+    public delegate Task BoardFullDEBUGEventHandler(IPage page, Player player);
     public static event BoardFullDEBUGEventHandler? BoardFullDEBUGEvent;
 
 
-    public ReplayPokerGame(Player player) {
+    public ReplayPokerGame(Player player, ReplayPokerGameConfig config) {
         this.player = player;
-        
-        BoardFullDEBUGEvent += CardUtils.GetGameStateFromBoard;
+        InitConfig(config);
+        OnPlayerTurnEvent += PlayerUtils.PlayTurn;
+        OnTableCloseEvent += Reload;
+        // BRANCHER L'EVENT DE FIN DE GAME
+        //BoardFullDEBUGEvent += CardUtils.GetGameStateFromBoard;
         //BoardFullDEBUGEvent += CardUtils.SaveSvgImageCardPairs;
     }
+    public ReplayPokerGame(Player player) 
+        : this(player, new()) {}
 
-    public async Task Play() {
+    private void InitConfig(ReplayPokerGameConfig config) {
+        this.mail = config.MAIL;
+        this.pass = config.PASS;
+        this.target_price = config.TARGET_PRICE;
+        this.max_free_seat = config.MAX_FREE_SEAT;
+        this.debug = config.DEBUG;
         UpdateEnv();
-        var browser = await Init();
-        await Login(browser); 
-        var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
-        var page = await JoinRoom(browser, room.URL);  
-
-        Run(page);
-    }
-    private async Task<IBrowserContext> Init() {
-        var playwright = await Playwright.CreateAsync();
-        var browser = await playwright.Firefox.LaunchAsync(new() {
-            Headless = !debug
-        });
-        var context = await browser.NewContextAsync();
-        return context;
+        if(this.mail == null || this.mail == "") {
+            mail = Environment.GetEnvironmentVariable("MAIL") ?? "";
+        }
+        if(this.pass == null || this.pass == "") {
+            pass = Environment.GetEnvironmentVariable("PASS") ?? "";
+        }
+        
+        if(this.mail == null || this.pass == null || this.mail == "" || this.pass == "") {
+            throw new ArgumentException("You need to enter your ReplayPokerGames credentials.");
+        }
     }
     private void UpdateEnv() {
         if(System.IO.File.Exists(Path.GetFullPath(ENV_FILE))) {
@@ -71,10 +85,41 @@ public class ReplayPokerGame
             }
        }
     }
-    private async Task Login(IBrowserContext browser) {
-        var mail = System.Environment.GetEnvironmentVariable("MAIL") ?? "";
-        var pass = System.Environment.GetEnvironmentVariable("PASS") ?? "";
 
+    public async Task Play() {
+        var browser = await Init();
+        await Login(browser); 
+        var room = await FetchRoom(browser, new() { Price = target_price, AvailableSeat = max_free_seat });
+        var page = await JoinRoom(browser, room.URL);  
+
+        session = Run(page);
+        await session;
+    }
+    private async void Reload(object sender, IPage page) {
+        var context = page.Context;
+        var browser = context.Browser;
+        await page.CloseAsync();
+        await context.CloseAsync();
+        if(browser != null) await browser.CloseAsync();
+
+        running = false;
+        if(session == null) {
+            return;
+        }
+        await session;
+
+        running = true;
+        await Play();
+    }
+    private async Task<IBrowserContext> Init() {
+        var playwright = await Playwright.CreateAsync();
+        var browser = await playwright.Firefox.LaunchAsync(new() {
+            Headless = !debug
+        });
+        var context = await browser.NewContextAsync();
+        return context;
+    }
+    private async Task Login(IBrowserContext browser) {
         var page = await browser.NewPageAsync();
         await page.GotoAsync(BASE_URL);
         await page.Locator("a").Filter(new() { HasText = "Log in" }).First.ClickAsync();
@@ -88,7 +133,6 @@ public class ReplayPokerGame
         var page = await browser.NewPageAsync();
         await page.GotoAsync(ROOMS_URL);
         AcceptCookies(page);
-        //await CloseBlockingPane(page);
         var rooms = new List<Room>();
         await page.Locator("li.lobby-game").First.WaitForAsync();
         var els = await page.Locator("li.lobby-game").AllAsync();
@@ -143,11 +187,12 @@ public class ReplayPokerGame
 
         return page;
     }
-    private void Run(IPage page) {
+    private Task Run(IPage page) {
         GameStartEvent?.Invoke(this, new GameStartEventArgs());
         
         // Horrendous but it works
-        var running = true;
+        round = -1;
+        playing = false;
         var tasks = new List<Task>();
         var task = Task.Run(async () => {
             while(running) {
@@ -163,10 +208,17 @@ public class ReplayPokerGame
         tasks.Add(task);
         task = Task.Run(async() => {
             while(running) {
+                await WaitForWinner(page);
+            }    
+        });
+        tasks.Add(task);
+        task = Task.Run(async() => {
+            while(running) {
                 await WaitForBoardFullDebug(page);
             }
         });
-        Task.WaitAll(tasks.ToArray());
+        tasks.Add(task);
+        return Task.WhenAll(tasks.ToArray());
     }
     private async Task WaitForNewTurn(IPage page) {
         var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
@@ -180,24 +232,41 @@ public class ReplayPokerGame
         while(playing || await playerLoc.CountAsync() < 1);
         playing = true;
 
-        var cards = new List<Card>();
-        var cardsCountDEBUG = await cardsLoc.CountAsync();
-        round = cardsCountDEBUG switch {
-            0 => 1,
-            3 => 2,
-            4 => 3,
-            5 => 4,
-            _ => -1
-        };
-        var state = new GameState(round, 0, 0, player, new Dictionary<string, int>(), new List<Card>());
-        OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state));
+        var state = await CardUtils.GetGameStateFromBoard(page, player);
+        OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state, page));
+        while(await playerLoc.CountAsync() >= 1);
+        playing = false;
     }
+    private async Task WaitForWinner(IPage page) {
+        var winningLoc = page.Locator(".Stack--winnings");
+        while(await winningLoc.CountAsync() == 0);
+        var winnerPosClass = await winningLoc.GetAttributeAsync("class") ?? "";
+        var winnerPos = PositionFromAttribute(winnerPosClass); 
+        var playerLocClass = await page.Locator(".Seat--currentUser").GetAttributeAsync("class") ?? ""; 
+        var playerPos = PositionFromAttribute(playerLocClass);
+        
+        var pot = await winningLoc.Locator("Stack__value").Locator("span").InnerTextAsync();
 
+        GameEndEvent?.Invoke(this, new GameEndEventArgs(winnerPos == playerPos ? player : null, Int32.Parse(pot)));
+    }
+    private async Task WaitForClosedTable(IPage page) {
+        var closedLoc = page.Locator("h1").Filter(new() { HasText="Table fermée" });
+        while(await closedLoc.CountAsync() < 1);
+        OnTableCloseEvent?.Invoke(this, page);
+    }
+    
     private async Task WaitForBoardFullDebug(IPage page) {
         var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card"); 
         while(round == 5 || await cardsLoc.CountAsync() < 5);
         round = 5;
-        BoardFullDEBUGEvent?.Invoke(page);
+        BoardFullDEBUGEvent?.Invoke(page, player);
+    }
+    
+    private int PositionFromAttribute(string attr) {
+        var classes = attr.Split(" ");
+        var clazz = Array.Find(classes, str => str.StartsWith("Position--"));
+        var target = classes.Last().ToString();
+        return Int32.Parse(target);
     }
 
 }
