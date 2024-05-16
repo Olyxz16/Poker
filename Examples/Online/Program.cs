@@ -6,7 +6,9 @@ using Poker.Online.Utils;
 namespace Online;
 
 class Program {
-    
+   
+    private const string MODEL_PATH = @"../../Models/model.h5";
+
     public static void Main(String[] args) {
     
         if(args.Contains("--analyze")) {
@@ -18,14 +20,13 @@ class Program {
     }
 
     private static void Run() {
-        NeuralNetPlayer player = null;
+        NeuralNetPlayer? player = new NeuralNetPlayer(100, MODEL_PATH);
         var config = new ReplayPokerGameConfig() {
             DEBUG = true
         };
         Task.Run(async () => {
                 var game = new ReplayPokerGame(player, config);
                 await game.Play(); 
-
                 }).Wait();
     }
 

@@ -8,10 +8,10 @@ public struct GameEndState
     public readonly bool IsDraw;
     
     public List<Player> Players;
-    public Player Winner;
+    public Player? Winner;
     public List<Player> Winners;
 
-    private GameEndState(List<Player> players, Player winner) {
+    private GameEndState(List<Player> players, Player? winner) {
         IsDraw = false;
         Players = players;
         Winner = winner;
@@ -25,7 +25,7 @@ public struct GameEndState
     }
 
 
-    public static GameEndState Win(List<Player> players, Player winner) {
+    public static GameEndState Win(List<Player> players, Player? winner) {
         return new GameEndState(players, winner);
     }
     public static GameEndState Draw(List<Player> players, List<Player> winners) {
