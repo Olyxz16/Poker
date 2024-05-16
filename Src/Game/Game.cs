@@ -42,10 +42,6 @@ public class Game : IGameEvents
         _bank = 0;
         _round = 0;
 
-        Console.WriteLine("1");
-
-        GameStartEvent += (object sender, GameStartEventArgs args) => { Console.WriteLine("2"); };
-
         GameStartEvent?.Invoke(this, new GameStartEventArgs(_players));
 
     }

@@ -25,7 +25,6 @@ public static class CardUtils {
             5 => 4,
             _ => -1
         };
-        Console.WriteLine(hand[0].ToString() + " " + hand[1].ToString()); 
         player.DrawHand(hand);
         var state = new GameState(round, turn, bank, player, new(), flop);
         return state;
@@ -54,10 +53,8 @@ public static class CardUtils {
         var cardsLoc = await page.Locator("div.Cards__communityCards").Locator("div.Card").AllAsync();
         foreach(var loc in cardsLoc) {
             var card = await GetCard(loc);
-            Console.Write(card.Rank + " " + card.Color + " | ");
             result.Add(card);
         }
-        Console.WriteLine();
         return result;
     }
     private static async Task<Card> GetCard(ILocator loc) {
