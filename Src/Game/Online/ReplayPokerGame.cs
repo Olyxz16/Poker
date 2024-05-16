@@ -181,9 +181,16 @@ public class ReplayPokerGame : IGameEvents
     private async Task<IPage> JoinRoom(IBrowserContext browser, string url) {
         var page = await browser.NewPageAsync();
         await page.GotoAsync(url);
-        //await page.Locator("div.SitNowControls").Locator("button").ClickAsync();
-        //await page.Locator("button.RadioButton:nth-child(2)").ClickAsync();
-        //await page.Locator("button").Filter(new() { HasText = "OK" }).ClickAsync();
+        var tasks = new Task[2];
+        tasks[0] = page.Locator("div.SitNowControls").Locator("button").ClickAsync();
+        tasks[1] = page.Locator("div.WaitingListControls").Locator("button").ClickAsync();
+        Task.WaitAny(tasks);
+        try {
+            await page.Locator("button.RadioButton:nth-child(2)").ClickAsync();
+            await page.Locator("button").Filter(new() { HasText = "OK" }).ClickAsync();
+        } catch {
+            return page;
+        }
         return page;
     }
     private Task Run(IPage page) {
@@ -226,12 +233,12 @@ public class ReplayPokerGame : IGameEvents
     private async Task WaitForYourTurn(IPage page) {
         var cardsLoc = page.Locator("div.Cards__communityCards").Locator("div.Card");
         var playerLoc = page.Locator(".Seat.Seat--currentUser.Seat--currentPlayer");
-        while(playing || await playerLoc.CountAsync() < 1);
+        while(playing || await playerLoc.CountAsync() == 0);
         playing = true;
-
+        
         var state = await CardUtils.GetGameStateFromBoard(page, player);
         OnPlayerTurnEvent?.Invoke(this, new OnPlayerTurnEventArgs(state));
-        while(await playerLoc.CountAsync() >= 1);
+        while(await playerLoc.CountAsync() == 1);
         playing = false;
     }
     private async Task WaitForWinner(IPage page) {
