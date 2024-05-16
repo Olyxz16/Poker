@@ -43,8 +43,8 @@ public class Program {
             agent1 = new NeuralNetPlayer(DEFAULT_BAL, modelPath);
             agent2 = new NeuralNetPlayer(DEFAULT_BAL, modelPath);
         }
-        var trainer = new TrainingUtils();
         var game = new Game(new() { agent1, agent2 });
+        var trainer = new TrainingUtils(game);
         game.Play();
         trainer.Train(agent1.Model, 3); 
         if(save) {
