@@ -10,10 +10,10 @@ public struct GameState
     public readonly int Turn;
     public readonly int Bank;
     public readonly Player Player;
-    public IReadOnlyDictionary<string, int> Bets;
+    public IReadOnlyList<int> Bets;
     public IReadOnlyList<Card> Flop;
 
-    public GameState(int round, int turn, int bank, Player player, Dictionary<string, int> bets, List<Card> flop) {
+    public GameState(int round, int turn, int bank, Player player, List<int> bets, List<Card> flop) {
         Round = round;
         Turn = turn;
         Bank = bank;

@@ -16,9 +16,9 @@ public class Game : IGameEvents
     protected List<Player> _players;
     public IReadOnlyList<Player> Players => _players;
 
-    protected Dictionary<string, int> _bets;
-    public IReadOnlyDictionary<string, int> Bets => _bets;
-    protected int MaxBetValue => _bets.Values.Max();
+    protected List<int> _bets;
+    public IReadOnlyList<int> Bets => _bets;
+    protected int MaxBetValue => _bets.Max();
 
     protected List<Card> _flop;
     public IReadOnlyList<Card> River => _flop;
@@ -34,7 +34,7 @@ public class Game : IGameEvents
     public Game(List<Player> players) {
 
         _players = players;
-        _bets = new Dictionary<string, int>();
+        _bets = new List<int>();
         _flop = new List<Card>();
 
         _deck = GetNewShuffledDeck();
@@ -66,8 +66,7 @@ public class Game : IGameEvents
         InitGame();
         var remainingPlayers = new List<Player>(_players);
         for(_round = 1 ; _round <= 4 ; _round++) {
-            _bets = new Dictionary<string, int>();
-            remainingPlayers.ForEach(p => _bets[p.Name] = 0);
+            _bets = new List<int>();
             PlayRound(remainingPlayers);
             SumPlayerBets();
         }
@@ -99,7 +98,7 @@ public class Game : IGameEvents
             }
             bool allowed = move.BetValue >= MaxBetValue || move.BetValue == player.Balance;
             if(move.MoveType == MoveType.BET && allowed) {
-                _bets[player.Name] += move.BetValue;
+                _bets.Add(move.BetValue);
                 player.Balance -= move.BetValue;
             } else {
                 i--;
@@ -109,7 +108,7 @@ public class Game : IGameEvents
     }
 
     private void SumPlayerBets() {
-        foreach(var bet in _bets.Values) {
+        foreach(var bet in _bets) {
             _bank += bet;
         }
     }

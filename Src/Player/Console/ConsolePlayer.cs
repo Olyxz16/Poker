@@ -128,8 +128,9 @@ public abstract class ConsolePlayer : Player, IDisplayable
         int index = 0;
         foreach(var bet in bets) {
             index++;
-            var nameField = new TextField(bet.Key);
-            var betField = new TextField(bet.Value.ToString());
+            // TODO : Fix the names
+            var nameField = new TextField("");
+            var betField = new TextField(bet.ToString());
             int xPos = xOff - nameField.PosX/2 + (int)((index-(0.5f+count/2f)) * xMargin);
             frame.AddComponent(nameField, xPos, yOff);
             frame.AddComponent(betField, xPos, yOff+1);

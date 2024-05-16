@@ -57,16 +57,16 @@ public static class MoveTraining {
         var gamestate = new GameState(round, turn, bank, player, bets, flop);
         return gamestate;
     }
-    private static Dictionary<string, int> GenerateBets(int turn) {
+    private static List<int> GenerateBets(int turn) {
         var maxBet = 5*Game.SMALL_BLIND;
-        var bets = new Dictionary<string, int>();
+        var bets = new List<int>();
         for(int i = 0 ; i < turn ; i++) {
             if(i == 0) {
-                bets.Add(i.ToString(), Game.SMALL_BLIND);
+                bets.Add(Game.SMALL_BLIND);
             } else if(i == 1) {
-                bets.Add(i.ToString(),Game.BIG_BLIND);
+                bets.Add(Game.BIG_BLIND);
             } else {
-                bets.Add(i.ToString(), new Random().Next(bets.Values.Last(), maxBet));
+                bets.Add(new Random().Next(bets.Last(), maxBet));
             }
         }
         return bets;
@@ -85,7 +85,7 @@ public static class MoveTraining {
         var move = index switch {
             0 => Move.Fold(),
             1 => Move.Bet(0),
-            2 => Move.Bet(state.Bets.Count > 0 ? state.Bets.Values.Max() : 0),
+            2 => Move.Bet(state.Bets.Count > 0 ? state.Bets.Max() : 0),
             3 => Move.Bet(0),
             _ => Move.Fold()
         };

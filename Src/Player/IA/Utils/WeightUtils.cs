@@ -11,7 +11,7 @@ public static class WeightUtils {
         var player = state.Player;
         var balance = player.Balance;
         var flop = state.Flop;
-        var maxPot = state.Bets.Count > 0 ? state.Bets.Values.Max() : 0;
+        var maxPot = state.Bets.Count > 0 ? state.Bets.Max() : 0;
 
         var inputs = new List<double>();
         var playerCard1 = WeightsFromCard(player.Hand[0]);
@@ -42,7 +42,7 @@ public static class WeightUtils {
     // Move
     public static Move MoveFromOutput(NDarray output, GameState state) {
         var ind = MaxInd(output);
-        var maxBet = state.Bets.Count() == 0 ? 0: state.Bets.Values.Max();
+        var maxBet = state.Bets.Count() == 0 ? 0: state.Bets.Max();
         var move = ind switch {
             0 => Move.Fold(),
             1 => Move.Bet(0),

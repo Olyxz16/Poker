@@ -49,7 +49,7 @@ public struct Move
             return true;
         }
 
-        var maxBet = state.Bets.Count > 0 ? state.Bets.Values.Max() : 0;
+        var maxBet = state.Bets.Count > 0 ? state.Bets.Max() : 0;
         var playerBet = chosenMove.BetValue;
         if(playerBet  == state.Player.Balance) {
             return true;
