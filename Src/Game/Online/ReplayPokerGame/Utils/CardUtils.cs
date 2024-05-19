@@ -14,7 +14,9 @@ public static class CardUtils {
     private static Dictionary<string, int> SVGToRank => CardSVGPair.Pairs;
 
     public static async Task<GameState> GetGameStateFromBoard(IPage page, Player player) {
+        
         var turn = await GetTurn(page);
+        var bets = await GetBets(page);
         var bank = await GetBank(page);
         var hand = await GetHand(page);
         var flop = await GetFlop(page);
@@ -26,13 +28,28 @@ public static class CardUtils {
             _ => -1
         };
         player.DrawHand(hand);
-        var state = new GameState(round, turn, bank, player, new(), flop);
+        var state = new GameState(round, turn, bank, player, bets, flop);
         return state;
     }
     private static async Task<int> GetTurn(IPage page) {
-        return -1;
+        var playerClass = await page.Locator(".Seat--currentUser").First.GetAttributeAsync("class") ?? "";
+        int playerPosition = PositionFromAttribute(playerClass);
+        var dealerClass = await page.Locator("svg.DealerButton").First.GetAttributeAsync("class") ?? "";
+        int dealerPosition = PositionFromAttribute(dealerClass);
+        var seatClass = (await page.Locator(".Game").First.GetAttributeAsync("class") ?? "").Split(" ")[2];
+        var seatCount = Int32.Parse(seatClass.Substring(6, seatClass.Length - 10));
+        return (playerPosition - dealerPosition) % seatCount;
     }
-    // TO BE REMADE
+    private static async Task<List<int>> GetBets(IPage page) {
+        var result = new List<int>();
+        var betsLoc = await page.Locator(".Stack--bet").Locator(".Stack__value").Locator("span").AllAsync();
+        foreach(var loc in betsLoc) {
+            var value = await loc.InnerTextAsync();
+            result.Add(Int32.Parse(value));
+        }
+        result.Sort();
+        return result;
+    }
     private static async Task<int> GetBank(IPage page) {
         var bankLoc = page.Locator(".Pot__value").First;
         var bankString = await bankLoc.InnerTextAsync();
@@ -102,6 +119,12 @@ public static class CardUtils {
     private static void ScreenCard(ILocator loc) {
         var errorPath = new Random().Next();
         loc.ScreenshotAsync(new() { Path=$"./error/{errorPath}.png" });
+    }
+    public static int PositionFromAttribute(string attr) {
+        var classes = attr.Split(" ");
+        var clazz = Array.Find(classes, str => str.StartsWith("Position--")) ?? "";
+        var target = clazz.Substring(10);
+        return Int32.Parse(target);
     }
 
     public static async Task SaveSvgImageCardPairs(IPage page) {

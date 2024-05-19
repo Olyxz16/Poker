@@ -186,8 +186,8 @@ public class ReplayPokerGame : IGameEvents
         tasks[1] = page.Locator("div.WaitingListControls").Locator("button").ClickAsync();
         Task.WaitAny(tasks);
         try {
-            await page.Locator("button.RadioButton:nth-child(2)").ClickAsync();
-            await page.Locator("button").Filter(new() { HasText = "OK" }).ClickAsync();
+            await page.Locator("button.RadioButton").Nth(1).ClickAsync();
+            await page.Locator("button.Button--round").Filter(new() { HasText = "OK" }).ClickAsync();
         } catch {
             return page;
         }
@@ -245,9 +245,9 @@ public class ReplayPokerGame : IGameEvents
         var winningLoc = page.Locator(".Stack--winnings");
         while(await winningLoc.CountAsync() == 0);
         var winnerPosClass = await winningLoc.GetAttributeAsync("class") ?? "";
-        var winnerPos = PositionFromAttribute(winnerPosClass); 
+        var winnerPos = CardUtils.PositionFromAttribute(winnerPosClass); 
         var playerLocClass = await page.Locator(".Seat--currentUser").GetAttributeAsync("class") ?? ""; 
-        var playerPos = PositionFromAttribute(playerLocClass);
+        var playerPos = CardUtils.PositionFromAttribute(playerLocClass);
         
         bool playerWon = winnerPos == playerPos;
         var state = GameEndState.Win(new() { player }, playerWon ? player : null);
@@ -266,11 +266,4 @@ public class ReplayPokerGame : IGameEvents
         BoardFullDEBUGEvent?.Invoke(page, player);
     }
     
-    private int PositionFromAttribute(string attr) {
-        var classes = attr.Split(" ");
-        var clazz = Array.Find(classes, str => str.StartsWith("Position--"));
-        var target = classes.Last().ToString();
-        return Int32.Parse(target);
-    }
-
 }

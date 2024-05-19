@@ -49,7 +49,7 @@ public static class PlayerUtils {
     }
     private static async Task Bet(IPage page, int value) {
         var button = page.Locator(".BettingControls__action--aggressive").First;
-        var inputLoc = page.Locator("NumberInput > input");
+        var inputLoc = page.Locator(".NumberInput > input");
         await inputLoc.FillAsync(value.ToString());
         await button.ClickAsync();
     }
